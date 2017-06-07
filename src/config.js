@@ -16,7 +16,7 @@ module.exports = Object.assign({
   apiPort: process.env.APIPORT,
   app: {
     title: 'Saphir',
-    description: 'Manage your community',
+    description: 'E-sports Team Manager',
     head: {
       titleTemplate: 'Saphir | %s',
       meta: [
