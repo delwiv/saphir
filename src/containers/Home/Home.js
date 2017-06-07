@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
-import { CounterButton, GithubButton } from 'components';
+// import { Link } from 'react-router';
+// import { CounterButton, GithubButton } from 'components';
 import config from 'config';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
@@ -40,7 +40,7 @@ export default class Home extends Component {
         </div>
 
         <div className="container">
-
+          Online: {` ${online.toString()}`}
         </div>
       </div>
     );

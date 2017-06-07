@@ -10,7 +10,7 @@ import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from 'react-helmet';
 import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
-import { Notifs, InfoBar } from 'components';
+import { Notifs } from 'components';
 import { push } from 'react-router-redux';
 import config from 'config';
 import { asyncConnect } from 'redux-connect';
