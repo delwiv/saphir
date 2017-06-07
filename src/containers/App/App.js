@@ -10,7 +10,7 @@ import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from 'react-helmet';
 import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
-import { Notifs, InfoBar } from 'components';
+import { Notifs } from 'components';
 import { push } from 'react-router-redux';
 import config from 'config';
 import { asyncConnect } from 'redux-connect';
@@ -88,22 +88,22 @@ export default class App extends Component {
 
           <Navbar.Collapse>
             <Nav navbar>
-              {user && <LinkContainer to="/chatFeathers">
+              {/* user && <LinkContainer to="/chatFeathers">
                 <NavItem>Chat with Feathers</NavItem>
-              </LinkContainer>}
+              </LinkContainer> */}
 
-              <LinkContainer to="/chat">
-                <NavItem>Chat</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/widgets">
-                <NavItem>Widgets</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/survey">
-                <NavItem>Survey</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/about">
-                <NavItem>About Us</NavItem>
-              </LinkContainer>
+              {/* <LinkContainer to="/chat">
+                  <NavItem>Chat</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/widgets">
+                  <NavItem>Widgets</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/survey">
+                  <NavItem>Survey</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/about">
+                  <NavItem>About Us</NavItem>
+                </LinkContainer> */}
 
               {!user && <LinkContainer to="/login">
                 <NavItem>Login</NavItem>
@@ -120,15 +120,7 @@ export default class App extends Component {
             {user && <p className="navbar-text">
               Logged in as <strong>{user.email}</strong>.
             </p>}
-            <Nav navbar pullRight>
-              <NavItem
-                target="_blank"
-                title="View on Github"
-                href="https://github.com/erikras/react-redux-universal-hot-example"
-              >
-                <i className="fa fa-github" />
-              </NavItem>
-            </Nav>
+            <Nav navbar pullRight />
           </Navbar.Collapse>
         </Navbar>
 
@@ -143,26 +135,10 @@ export default class App extends Component {
 
           {children}
         </div>
-        <InfoBar />
+        {/* <InfoBar /> */}
 
-        <div className="well text-center">
-          Have questions? Ask for help{' '}
-          <a
-            href="https://github.com/erikras/react-redux-universal-hot-example/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            on Github
-          </a>
-          {' '}or in the{' '}
-          <a
-            href="https://discord.gg/0ZcbPKXt5bZZb1Ko"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            #react-redux-universal
-          </a>
-          {' '}Discord channel.
+        <div className="well text-right">
+          © Mathemagics 2017
         </div>
       </div>
     );
