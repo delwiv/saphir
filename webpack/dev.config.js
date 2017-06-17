@@ -48,6 +48,9 @@ var webpackConfig = module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'main': [
+      '!!style-loader!css-loader!react-mdl/extra/material.min.css',
+      '!!style-loader!css-loader!material-design-icons-iconfont/dist/material-design-icons.css',
+      'react-mdl/extra/material.min.js',
       'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
       'react-hot-loader/patch',
       'bootstrap-loader',

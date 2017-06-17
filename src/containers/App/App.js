@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { IndexLink } from 'react-router';
-import { LinkContainer } from 'react-router-bootstrap';
-import Navbar from 'react-bootstrap/lib/Navbar';
-import Nav from 'react-bootstrap/lib/Nav';
-import NavItem from 'react-bootstrap/lib/NavItem';
 import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from 'react-helmet';
 import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
@@ -14,7 +10,7 @@ import { Notifs } from 'components';
 import { push } from 'react-router-redux';
 import config from 'config';
 import { asyncConnect } from 'redux-connect';
-
+import { Layout, Header, Textfield, Navigation, Drawer } from 'react-mdl';
 @asyncConnect([{
   promise: ({ store: { dispatch, getState } }) => {
     const promises = [];
@@ -75,71 +71,50 @@ export default class App extends Component {
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head} />
-        <Navbar fixedTop>
-          <Navbar.Header>
-            <Navbar.Brand>
+        <Layout fixedHeader fixedDrawer>
+          <Header title="Title">
+            <Textfield
+              value=""
+              onChange={() => {}}
+              label="Search"
+              expandable
+              expandableIcon="search"
+            />
+          </Header>
+          <Drawer title="Title">
+            <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <div className={styles.brand} />
                 <span>{config.app.title}</span>
               </IndexLink>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-
-          <Navbar.Collapse>
-            <Nav navbar>
-              {/* user && <LinkContainer to="/chatFeathers">
-                <NavItem>Chat with Feathers</NavItem>
-              </LinkContainer> */}
-
-              {/* <LinkContainer to="/chat">
-                  <NavItem>Chat</NavItem>
-                </LinkContainer>
-                <LinkContainer to="/widgets">
-                  <NavItem>Widgets</NavItem>
-                </LinkContainer>
-                <LinkContainer to="/survey">
-                  <NavItem>Survey</NavItem>
-                </LinkContainer>
-                <LinkContainer to="/about">
-                  <NavItem>About Us</NavItem>
-                </LinkContainer> */}
-
-              {!user && <LinkContainer to="/login">
-                <NavItem>Login</NavItem>
-              </LinkContainer>}
-              {!user && <LinkContainer to="/register">
-                <NavItem>Register</NavItem>
-              </LinkContainer>}
-              {user && <LinkContainer to="/logout">
-                <NavItem className="logout-link" onClick={this.handleLogout}>
+              {!user && <IndexLink to="/login">
+                <span>Login</span>
+              </IndexLink>}
+              {!user && <IndexLink to="/register">
+                <span>Register</span>
+              </IndexLink>}
+              {user && <IndexLink to="/logout">
+                <span role="button" tabIndex={0} className="logout-link" onClick={this.handleLogout}>
                   Logout
-                </NavItem>
-              </LinkContainer>}
-            </Nav>
-            {user && <p className="navbar-text">
-              Logged in as <strong>{user.email}</strong>.
-            </p>}
-            <Nav navbar pullRight />
-          </Navbar.Collapse>
-        </Navbar>
-
-        <div className={styles.appContent}>
-          {notifs.global && <div className="container">
-            <Notifs
-              className={styles.notifs}
-              namespace="global"
-              NotifComponent={props => <Alert bsStyle={props.kind}>{props.message}</Alert>}
+                </span>
+              </IndexLink>}
+            </Navigation>
+          </Drawer>
+          <div className={styles.appContent}>
+            {notifs.global && <div className="container">
+              <Notifs
+                className={styles.notifs}
+                namespace="global"
+                NotifComponent={props => <Alert bsStyle={props.kind}>{props.message}</Alert>}
             />
-          </div>}
+            </div>}
 
-          {children}
-        </div>
-        {/* <InfoBar /> */}
-
-        <div className="well text-right">
-          © Mathemagics 2017
-        </div>
+            {children}
+          </div>
+          <div className="well text-right">
+            © Mathemagics 2017
+          </div>
+        </Layout>
       </div>
     );
   }
