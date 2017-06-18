@@ -52,7 +52,7 @@ export default class App extends Component {
     if (!this.props.user && nextProps.user) {
       // login
       const redirect = this.props.router.location.query && this.props.router.location.query.redirect;
-      this.props.pushState(redirect || '/loginSuccess');
+      this.props.pushState(redirect || '/');
     } else if (this.props.user && !nextProps.user) {
       // logout
       this.props.pushState('/');
@@ -71,21 +71,38 @@ export default class App extends Component {
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head} />
-        <Layout fixedHeader fixedDrawer>
-          <Header title="Title">
+        <Layout fixedHeader>
+          <Header>
+            <Navigation>
+              <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
+                <span className={styles.brand} />
+              </IndexLink>
+              {!user && <IndexLink to="/login">
+                <span>Login</span>
+              </IndexLink>}
+              {!user && <IndexLink to="/register">
+                <span>Register</span>
+              </IndexLink>}
+              {user && <IndexLink to="/logout">
+                <span role="button" tabIndex={0} className="logout-link" onClick={this.handleLogout}>
+                  Logout
+                </span>
+              </IndexLink>}
+            </Navigation>
             <Textfield
+              floatingLabel
               value=""
+              placeholder="Team name, member, tournament, city..."
               onChange={() => {}}
               label="Search"
               expandable
               expandableIcon="search"
             />
           </Header>
-          <Drawer title="Title">
+          <Drawer>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <div className={styles.brand} />
-                <span>{config.app.title}</span>
               </IndexLink>
               {!user && <IndexLink to="/login">
                 <span>Login</span>

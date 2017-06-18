@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import config from 'config';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { CardLink } from 'components';
+import { Grid, Cell } from 'react-mdl';
 
 @connect(
   state => ({
@@ -33,15 +35,46 @@ export default class Home extends Component {
               </p>
             </div>
             <h1>{config.app.title}</h1>
-
             <h2>{config.app.description}</h2>
 
           </div>
         </div>
 
-        <div className="container">
-          Online: {` ${online.toString()}`}
-        </div>
+        <Grid style={{ width: '97%' }}>
+          <Cell col={6} tablet={4}>
+            <CardLink
+              to="/tournaments"
+              title="Tournaments"
+              desc="Tournaments"
+              bg="http://euw.leagueoflegends.com/sites/default/files/styles/scale_xlarge/public/upload/wc_numbers_banner_17.jpg?itok=pZSmd4xY"
+            />
+          </Cell>
+          <Cell col={6} tablet={4}>
+            <CardLink
+              to="/teams"
+              title="Teams"
+              desc="Teams"
+              bg="http://static.mnium.org/images/contenu/actus/LOL/LCS2014/Recap/1150494_702525003100878_650756820_o.jpg"
+            />
+          </Cell>
+          <Cell col={6} tablet={4}>
+            <CardLink
+              to="/profile"
+              title="Profile"
+              desc="Profile"
+              bg="http://quanticfoundry.com/wp-content/uploads/2015/07/photodune-9235903-game-m-16x9.jpg"
+            />
+          </Cell>
+          <Cell col={6} tablet={4}>
+            <CardLink
+              to="/meet"
+              title="Meet"
+              desc="Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet"
+              bg="https://2.bp.blogspot.com/-_LijqBWZexo/WMWSdklat4I/AAAAAAAAotE/8aivsdwaQxwLZGdtTInw_BacfmUdLxTKgCLcB/s1600/Transparent%2BLogo%2BFile.png"
+            />
+          </Cell>
+        </Grid>
+        Online: {` ${online.toString()}`}
       </div>
     );
   }

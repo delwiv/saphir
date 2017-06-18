@@ -1,15 +1,15 @@
 .app {
   .brand {
-    position: absolute;
-    $size: 40px;
-    top: 5px;
+    position: relative;
+    top: 10px;
     left: 5px;
+    $size: 40px;
     display: inline-block;
     background: #2d2d2d url('../Home/logo.png') no-repeat center center;
     width: $size;
     height: $size;
     background-size: 80%;
-    margin: 0 10px 0 0;
+    margin: auto;
     border-radius: $size / 2;
   }
   nav :global(.fa) {
@@ -24,6 +24,8 @@
 }
 
 .notifs {
+  position: absolute;
+  top: 0;
   margin: 15px 0;
 }
 
