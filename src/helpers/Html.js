@@ -28,7 +28,7 @@ export default class Html extends Component {
     const { assets, component, store } = this.props;
     const content = component ? ReactDOM.renderToString(component) : '';
     const head = Helmet.renderStatic();
-
+     /* eslint-disable */
     return (
       <html lang="en-US">
         <head>
@@ -62,7 +62,7 @@ export default class Html extends Component {
           {assets.styles && Object.keys(assets.styles).length === 0 ?
             <style dangerouslySetInnerHTML={{ __html: '#content{display:none}' }} /> : null}
         </head>
-        <body>
+        <body> {/* eslint-disable-next-line */ }
           <div id="content" dangerouslySetInnerHTML={{ __html: content }} />
           {store && <script
             dangerouslySetInnerHTML={{ __html: `window.__data=${serialize(store.getState())};` }}
@@ -77,5 +77,6 @@ export default class Html extends Component {
         </body>
       </html>
     );
+    /* eslint-enable */
   }
 }
