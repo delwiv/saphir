@@ -21,6 +21,9 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     main: [
+      '!!style-loader!css-loader!react-mdl/extra/material.min.css',
+      '!!style-loader!css-loader!material-design-icons-iconfont/dist/material-design-icons.css',
+      'react-mdl/extra/material.min.js',
       // 'bootstrap-loader',
       'font-awesome-webpack!./src/theme/font-awesome.config.prod.js',
       './src/client.js'
