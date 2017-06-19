@@ -99,17 +99,17 @@ Promise.all([window.__data ? true : isOnline(), getStoredState(offlinePersistCon
       }
     }
 
-    if (false && __DEVTOOLS__ && !window.devToolsExtension) {
-      const devToolsDest = document.createElement('div');
-      window.document.body.insertBefore(devToolsDest, null);
-      const DevTools = require('./containers/DevTools/DevTools');
-      ReactDOM.render(
-        <Provider store={store} key="provider">
-          <DevTools />
-        </Provider>,
-        devToolsDest
-      );
-    }
+    // if (__DEVTOOLS__ && !window.devToolsExtension) {
+    //   const devToolsDest = document.createElement('div');
+    //   window.document.body.insertBefore(devToolsDest, null);
+    //   const DevTools = require('./containers/DevTools/DevTools');
+    //   ReactDOM.render(
+    //     <Provider store={store} key="provider">
+    //       <DevTools />
+    //     </Provider>,
+    //     devToolsDest
+    //   );
+    // }
 
     if (online && !__DEVELOPMENT__ && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/dist/service-worker.js', { scope: '/' })

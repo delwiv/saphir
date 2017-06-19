@@ -46,6 +46,7 @@ export default class Home extends Component {
               to="/tournaments"
               title="Tournaments"
               desc="Tournaments"
+              // eslint-disable-next-line
               bg="http://euw.leagueoflegends.com/sites/default/files/styles/scale_xlarge/public/upload/wc_numbers_banner_17.jpg?itok=pZSmd4xY"
             />
           </Cell>
@@ -54,6 +55,7 @@ export default class Home extends Component {
               to="/teams"
               title="Teams"
               desc="Teams"
+              // eslint-disable-next-line
               bg="http://static.mnium.org/images/contenu/actus/LOL/LCS2014/Recap/1150494_702525003100878_650756820_o.jpg"
             />
           </Cell>
@@ -70,6 +72,7 @@ export default class Home extends Component {
               to="/meet"
               title="Meet"
               desc="Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet Meet"
+              // eslint-disable-next-line
               bg="https://2.bp.blogspot.com/-_LijqBWZexo/WMWSdklat4I/AAAAAAAAotE/8aivsdwaQxwLZGdtTInw_BacfmUdLxTKgCLcB/s1600/Transparent%2BLogo%2BFile.png"
             />
           </Cell>

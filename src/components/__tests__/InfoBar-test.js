@@ -27,6 +27,7 @@ describe('InfoBar', () => {
       <InfoBar />
     </Provider>
   );
+  // eslint-disable-next-line
   const dom = ReactDOM.findDOMNode(renderer); // TODO replace findDOMNode method
 
   it('should render correctly', () => expect(renderer).to.be.ok);
