@@ -1,0 +1,14 @@
+mongo:
+  image: mongo:latest
+  environment:
+    MONGO_DB: saphir
+    MONGO_USER: docker
+    MONGO_PASSWORD: docker
+  ports:
+    - "27017:27017"
+  command: "--smallfiles --logpath=/dev/null"
+
+redis:
+  image: redis:3.2
+  ports:
+    - "6379:6379"

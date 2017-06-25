@@ -1,24 +1,47 @@
+import getEnv from './env'
+
 const ONE_DAY = 60 * 60 * 24 * 1000;
 
-module.exports = {
-  auth: {
-    secret: 'super secret',
-    cookie: {
-      enabled: true,
-      httpOnly: false,
-      maxAge: ONE_DAY,
-      secure: process.env.NODE_ENV === 'production'
-    },
-    facebook: {
-      path: '/auth/facebook',
-      clientID: '635147529978862',
-      clientSecret: '28c16a4effa4a5f1371924e4dd12c8cd',
-      permissions: {
-        authType: 'rerequest'
+const env = [
+  'MONGO_PORT',
+  'MONGO_HOST',
+  'MONGO_DB',
+  // 'MONGO_USER',
+  // 'MONGO_PASS',
+  // 'API_PORT',
+  // 'SESSION_SECRET',
+  // 'FB_CLIENT_ID',
+  // 'FB_CLIENT_SECRET',
+  // 'TWITCH_CLIENT_ID'
+]
+
+export default () => {
+  const config = env.reduce((acc, e) => {
+    acc[e] = getEnv(e)
+    return acc
+  }, {})
+
+  return {
+    env: config,
+    auth: {
+      secret: 'super secret',
+      cookie: {
+        enabled: true,
+        httpOnly: false,
+        maxAge: ONE_DAY,
+        secure: process.env.NODE_ENV === 'production'
       },
-      scope: ['public_profile', 'email'],
-      profileFields: ['id', 'displayName', 'photos', 'email', 'first_name', 'last_name', 'age_range'],
-      accessTokenField: 'accessToken'
+      facebook: {
+        path: '/auth/facebook',
+        clientID: '635147529978862',
+        clientSecret: '28c16a4effa4a5f1371924e4dd12c8cd',
+        permissions: {
+          authType: 'rerequest'
+        },
+        scope: ['public_profile', 'email'],
+        profileFields: ['id', 'displayName', 'photos', 'email', 'first_name', 'last_name', 'age_range'],
+        accessTokenField: 'accessToken'
+      }
     }
   }
-};
+}

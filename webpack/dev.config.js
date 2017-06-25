@@ -14,15 +14,7 @@ var port = (+process.env.PORT + 1) || 3001;
 var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
-var babelrc = fs.readFileSync('./.babelrc');
-var babelrcObject = {};
-
-try {
-  babelrcObject = JSON.parse(babelrc);
-} catch (err) {
-  console.error('==>     ERROR: Error parsing your .babelrc.');
-  console.error(err);
-}
+var babelrcObject = require('../package.json').babel;
 
 var babelrcObjectDevelopment = babelrcObject.env && babelrcObject.env.development || {};
 
