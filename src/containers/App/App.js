@@ -10,7 +10,17 @@ import { Notifs } from 'components';
 import { push } from 'react-router-redux';
 import config from 'config';
 import { asyncConnect } from 'redux-connect';
-import { Layout, Header, Textfield, Navigation, Drawer } from 'react-mdl';
+import {
+  Layout,
+  Header,
+  Footer,
+  FooterSection,
+  FooterLinkList,
+  FooterDropDownSection,
+  Navigation,
+  Drawer
+} from 'react-mdl';
+
 @asyncConnect([{
   promise: ({ store: { dispatch, getState } }) => {
     const promises = [];
@@ -89,7 +99,7 @@ export default class App extends Component {
                 </span>
               </IndexLink>}
             </Navigation>
-            <Textfield
+            {/* <Textfield
               floatingLabel
               value=""
               placeholder="Team name, member, tournament, city..."
@@ -97,7 +107,7 @@ export default class App extends Component {
               label="Search"
               expandable
               expandableIcon="search"
-            />
+            />*/}
           </Header>
           <Drawer>
             <Navigation>
@@ -128,8 +138,51 @@ export default class App extends Component {
 
             {children}
           </div>
+          <Footer size="mega">
+            <FooterSection type="middle">
+              <FooterDropDownSection title="Features">
+                <FooterLinkList>
+                  <a href="/">About</a>
+                  <a href="/">Terms</a>
+                  <a href="/">Partners</a>
+                  <a href="/">Updates</a>
+                </FooterLinkList>
+              </FooterDropDownSection>
+              <FooterDropDownSection title="Details">
+                <FooterLinkList>
+                  <a href="/">Specs</a>
+                  <a href="/">Tools</a>
+                  <a href="/">Resources</a>
+                </FooterLinkList>
+              </FooterDropDownSection>
+              <FooterDropDownSection title="Technology">
+                <FooterLinkList>
+                  <a href="/">How it works</a>
+                  <a href="/">Patterns</a>
+                  <a href="/">Usage</a>
+                  <a href="/">Products</a>
+                  <a href="/">Contracts</a>
+                </FooterLinkList>
+              </FooterDropDownSection>
+              <FooterDropDownSection title="FAQ">
+                <FooterLinkList>
+                  <a href="/">Questions</a>
+                  <a href="/">Answers</a>
+                  <a href="/">Contact Us</a>
+                </FooterLinkList>
+              </FooterDropDownSection>
+            </FooterSection>
+            <FooterSection type="bottom" logo="Title">
+              <FooterLinkList>
+                <a href="/">Help</a>
+                <a href="/">Privacy & Terms</a>
+              </FooterLinkList>
+            </FooterSection>
+            <FooterSection>
+              <span>© Mathemagics 2017</span>
+            </FooterSection>
+          </Footer>
           <div className="well text-right">
-            © Mathemagics 2017
           </div>
         </Layout>
       </div>
