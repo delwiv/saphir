@@ -34,6 +34,7 @@ import {
     return Promise.all(promises);
   }
 }])
+
 @connect(
   state => ({
     notifs: state.notifs,

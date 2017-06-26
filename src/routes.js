@@ -61,6 +61,7 @@ export default store => {
       </Route>
 
       {/* Routes */}
+      <Route path="profile" getComponent={() => System.import('./containers/Profile/Profile')} />
       <Route path="login" getComponent={() => System.import('./containers/Login/Login')} />
       <Route path="about" getComponent={() => System.import('./containers/About/About')} />
       <Route

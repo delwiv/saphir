@@ -5,15 +5,16 @@ import Helmet from 'react-helmet';
 import RegisterForm from 'components/RegisterForm/RegisterForm';
 import * as authActions from 'redux/modules/auth';
 import * as notifActions from 'redux/modules/notifs';
-
+import { push } from 'react-router-redux';
 @connect(
   () => ({}),
-  { ...notifActions, ...authActions })
+  { ...notifActions, ...authActions, pushState: push })
 export default class Register extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     register: PropTypes.func.isRequired,
-    notifSend: PropTypes.func.isRequired
+    notifSend: PropTypes.func.isRequired,
+    pushState: PropTypes.func.isRequired
   }
 
   getInitialValues = () => {
@@ -24,8 +25,9 @@ export default class Register extends Component {
   register = data => this.props.register(data).then(this.successRegister);
 
   successRegister = result => {
+    this.props.pushState('/login')
     this.props.notifSend({
-      message: 'You\'r now registered !',
+      message: 'You\'r now registered !\n\nPlease Login ;-)',
       kind: 'success',
       dismissAfter: 2000
     });
@@ -36,8 +38,9 @@ export default class Register extends Component {
     return (
       <div className="container">
         <Helmet title="Register" />
-        <h1>Register</h1>
+        <h1>Or register</h1>
         <RegisterForm onSubmit={this.register} initialValues={this.getInitialValues()} />
+
       </div>
     );
   }

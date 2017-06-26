@@ -6,7 +6,7 @@
  */
 
 export CounterButton from './CounterButton/CounterButton';
-// export FacebookLogin from './FacebookLogin/FacebookLogin';
+export FacebookLogin from './FacebookLogin/FacebookLogin';
 export GithubButton from './GithubButton/GithubButton';
 export InfoBar from './InfoBar/InfoBar';
 // export LoginForm from './LoginForm/LoginForm';
@@ -14,6 +14,6 @@ export InfoBar from './InfoBar/InfoBar';
 export Notifs from './Notifs/Notifs';
 export Provider from './Provider/Provider';
 export CardLink from './CardLink/CardLink';
-// export RegisterForm from './RegisterForm/RegisterForm';
+export RegisterForm from './RegisterForm/RegisterForm';
 // export SurveyForm from './SurveyForm/SurveyForm';
 // export WidgetForm from './WidgetForm/WidgetForm';

@@ -1,0 +1,12 @@
+@import '../../theme/variables.scss';
+
+.profile {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: stretch;
+  .header {
+    width: 100vw;
+    margin-bottom: 15px;
+  }
+}
