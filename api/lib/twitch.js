@@ -1,10 +1,9 @@
 import TwitchClient from 'node-twitchtv';
 
-export default function() {
+export default function () {
   const {
     TWITCH_CLIENT_ID,
     TWITCH_CLIENT_SECRET,
-    OAUTH_REDIRECT_PATH,
     SAPHIR_APP_HOST
   } = this.get('config').env;
 

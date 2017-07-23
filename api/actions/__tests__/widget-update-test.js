@@ -5,9 +5,8 @@ import * as load from '../widget/load';
 
 describe('widget update', () => {
   afterEach(() => {
-    if ('restore' in Math.random) {
+    if ('restore' in Math.random)
       Math.random.restore(); // reset the Math.random fixture
-    }
   });
 
   describe('randomly successful', () => {
@@ -18,9 +17,8 @@ describe('widget update', () => {
     });
 
     afterEach(() => {
-      if ('restore' in load.default) {
+      if ('restore' in load.default)
         load.default.restore();
-      }
     });
 
     it('does not accept green widgets', () => {

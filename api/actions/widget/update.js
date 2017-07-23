@@ -4,9 +4,9 @@ export default function update(req) {
   return new Promise((resolve, reject) => {
     // write to database
     setTimeout(() => {
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.2)
         reject('Oh no! Widget save fails 20% of the time. Try again.');
-      } else {
+      else {
         load(req).then(data => {
           const widgets = data;
           const widget = req.body;

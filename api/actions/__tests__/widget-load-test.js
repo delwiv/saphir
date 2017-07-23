@@ -4,9 +4,8 @@ import load from '../widget/load';
 
 describe('widget load', () => {
   afterEach(() => {
-    if ('restore' in Math.random) {
+    if ('restore' in Math.random)
       Math.random.restore(); // reset the Math.random fixture
-    }
   });
 
   describe('successful', () => {

@@ -26,15 +26,14 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 export function notifSend(notif, namespace = 'global') {
-  if (!notif.id) {
+  if (!notif.id)
     notif.id = new Date().getTime() * Math.random();
-  }
+
   return dispatch => {
     dispatch({ type: NOTIF_SEND, namespace, payload: notif });
 
-    if (notif.dismissAfter) {
+    if (notif.dismissAfter)
       setTimeout(() => dispatch({ type: NOTIF_DISMISS, namespace, payload: notif.id }), notif.dismissAfter);
-    }
   };
 }
 

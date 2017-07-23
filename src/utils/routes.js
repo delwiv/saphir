@@ -41,9 +41,9 @@ export default function getRoutesUtils(store) {
   }
 
   function loadAuthIfNeeded() {
-    if (!isAuthLoaded(store.getState())) {
+    if (!isAuthLoaded(store.getState()))
       return store.dispatch(loadAuth()).catch(() => {});
-    }
+
     return Promise.resolve();
   }
 

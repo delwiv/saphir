@@ -11,9 +11,9 @@ function createAsyncValidator(rules, params) {
         const myResolve = () => ({ status: 'resolved', name });
         const myReject = err => ({ status: 'rejected', name, error: err });
 
-        if (isPromise(error)) {
+        if (isPromise(error))
           return error.then(myResolve).catch(myReject);
-        }
+
 
         return error ? myReject() : myResolve();
       });
@@ -32,9 +32,8 @@ function createAsyncValidator(rules, params) {
 function unique(field) {
   return (value, data, { hook }) => hook.service.find({ query: { [field]: value } })
     .then(result => {
-      if (result.total !== 0) {
+      if (result.total !== 0)
         return Promise.reject('Already exist');
-      }
     });
 }
 

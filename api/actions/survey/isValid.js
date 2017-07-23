@@ -7,11 +7,10 @@ export default function survey(req) {
         errors.email = 'Email address already used';
         valid = false;
       }
-      if (valid) {
+      if (valid)
         resolve();
-      } else {
+      else
         reject(errors);
-      }
     }, 1000);
   });
 }

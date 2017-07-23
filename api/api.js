@@ -1,6 +1,8 @@
+import mongoose from 'mongoose'
+import bluebird from 'bluebird'
 import feathers from 'feathers'
 import morgan from 'morgan'
-import session from 'express-session'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import hooks from 'feathers-hooks'
@@ -14,11 +16,8 @@ import services from './services'
 import * as actions from './actions'
 import { mapUrl } from './utils/url.js'
 import auth, { socketAuth } from './services/authentication'
-import mongoose from 'mongoose'
-import bluebird from 'bluebird'
 import redis from './redis'
 import twitch from './lib/twitch'
-import cors from 'cors'
 require('dotenv').config()
 
 global.Promise = bluebird
@@ -56,25 +55,22 @@ const actionsHandler = (req, res, next) => {
       const handle = action(req, params)
       ;(isPromise(handle) ? handle : Promise.resolve(handle))
         .then(result => {
-          if (result instanceof Function) {
+          if (result instanceof Function)
             result(res)
-          } else {
+          else
             res.json(result)
-          }
         })
         .catch(reason => {
-          if (reason && reason.redirect) {
+          if (reason && reason.redirect)
             res.redirect(reason.redirect)
-          } else {
+          else
             catchError(reason)
-          }
         })
     } catch (error) {
       catchError(error)
     }
-  } else {
+  } else
     next()
-  }
 }
 
 const configure = () => {
@@ -90,15 +86,15 @@ const configure = () => {
 
   if (process.env.APIPORT) {
     app.listen(process.env.APIPORT, err => {
-      if (err) {
+      if (err)
         console.error(err)
-      }
+
       console.info('----\n==> 🌎  API is running on port %s', process.env.APIPORT)
       console.info('==> 💻  Send requests to http://localhost:%s', process.env.APIPORT)
     })
-  } else {
+  } else
     console.error('==>     ERROR: No APIPORT environment variable has been specified')
-  }
+
 
   const bufferSize = 100
   const messageBuffer = new Array(bufferSize)
@@ -114,9 +110,8 @@ const configure = () => {
       for (let index = 0; index < bufferSize; index++) {
         const msgNo = (messageIndex + index) % bufferSize
         const msg = messageBuffer[msgNo]
-        if (msg) {
+        if (msg)
           socket.emit('msg', msg)
-        }
       }
     })
 

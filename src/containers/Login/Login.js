@@ -7,7 +7,6 @@ import FacebookLogin from 'components/FacebookLogin/FacebookLogin';
 import * as authActions from 'redux/modules/auth';
 import * as notifActions from 'redux/modules/notifs';
 import { Button } from 'react-mdl';
-import { Link } from 'react-router';
 
 @connect(
   state => ({ user: state.auth.user, twitchUrl: state.auth.twitchUrl }),
@@ -18,7 +17,6 @@ export default class Login extends Component {
     twitchUrl: PropTypes.string,
     login: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
-    getTwitchUrl: PropTypes.func.isRequired,
     notifSend: PropTypes.func.isRequired
   }
 

@@ -21,9 +21,9 @@ const configureApp = transport => feathers()
 export const socket = io('', { path: host('/ws'), autoConnect: false });
 
 export function createApp(req) {
-  if (req === 'rest') {
+  if (req === 'rest')
     return configureApp(rest(host('/api')).superagent(superagent));
-  }
+
 
   if (__SERVER__ && req) {
     const app = configureApp(rest(host('/api')).superagent(superagent, {

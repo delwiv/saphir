@@ -120,9 +120,9 @@ export default function reducer(state = initialState, action = {}) {
 
 const catchValidation = error => {
   if (error.message) {
-    if (error.message === 'Validation failed' && error.data) {
+    if (error.message === 'Validation failed' && error.data)
       throw new SubmissionError(error.data);
-    }
+
     throw new SubmissionError({ _error: error.message });
   }
   return Promise.reject(error);

@@ -18,7 +18,7 @@ export default class Home extends Component {
 
   static propTypes = {
     online: PropTypes.bool.isRequired,
-    routing: PropTypes.object
+    routing: PropTypes.object.isRequired
   };
 
   render() {

@@ -11,9 +11,8 @@ const { isLoaded, load: loadWidgets } = widgetActions;
 @asyncConnect([{
   deferred: true,
   promise: ({ store: { dispatch, getState } }) => {
-    if (!isLoaded(getState())) {
+    if (!isLoaded(getState()))
       return dispatch(loadWidgets());
-    }
   }
 }])
 @connect(

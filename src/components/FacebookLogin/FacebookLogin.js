@@ -48,9 +48,8 @@ class FacebookLogin extends Component {
         cookie,
       });
 
-      if (autoLoad || window.location.search.includes('facebookdirect')) {
+      if (autoLoad || window.location.search.includes('facebookdirect'))
         window.FB.getLoginStatus(this.checkLoginState);
-      }
     };
     // Load the SDK asynchronously
     ((d, id) => {
@@ -69,11 +68,10 @@ class FacebookLogin extends Component {
         `&redirect_uri=${window.location.href}&state=facebookdirect&${scope}`;
     } else {
       window.FB.login(response => {
-        if (response.authResponse) {
+        if (response.authResponse)
           this.props.onLogin(null, response.authResponse);
-        } else {
+        else
           this.props.onLogin(response);
-        }
       }, { scope });
     }
   };

@@ -79,9 +79,9 @@ export default class WidgetForm extends Component {
             className="btn btn-success"
             onClick={handleSubmit(() => save(values)
               .catch(err => {
-                if (typeof err === 'object') {
+                if (typeof err === 'object')
                   throw new SubmissionError(err);
-                }
+
                 return Promise.reject(err);
               })
             )}

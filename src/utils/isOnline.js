@@ -9,9 +9,9 @@ export default function isOnline(path = '/favicon.ico') {
   return new Promise(resolve => {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && (xhr.status < 300 || xhr.status === 304)) {
+        if (xhr.status >= 200 && (xhr.status < 300 || xhr.status === 304))
           return resolve(true);
-        }
+
         resolve(false);
       }
     };

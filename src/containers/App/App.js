@@ -25,12 +25,12 @@ import {
   promise: ({ store: { dispatch, getState } }) => {
     const promises = [];
 
-    if (!isAuthLoaded(getState())) {
+    if (!isAuthLoaded(getState()))
       promises.push(dispatch(loadAuth()));
-    }
-    if (!isInfoLoaded(getState())) {
+
+    if (!isInfoLoaded(getState()))
       promises.push(dispatch(loadInfo()));
-    }
+
     return Promise.all(promises);
   }
 }])

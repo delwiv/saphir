@@ -19,33 +19,33 @@ export default class ApiClient {
       this[method] = (path, { params, data, headers, files, fields } = {}) => new Promise((resolve, reject) => {
         const request = superagent[method](formatUrl(path));
 
-        if (params) {
+        if (params)
           request.query(params);
-        }
 
-        if (__SERVER__ && req.get('cookie')) {
+
+        if (__SERVER__ && req.get('cookie'))
           request.set('cookie', req.get('cookie'));
-        }
 
-        if (headers) {
+
+        if (headers)
           request.set(headers);
-        }
 
-        if (this.token) {
+
+        if (this.token)
           request.set('Authorization', `Bearer ${this.token}`);
-        }
 
-        if (files) {
+
+        if (files)
           files.forEach(file => request.attach(file.key, file.value));
-        }
 
-        if (fields) {
+
+        if (fields)
           fields.forEach(item => request.field(item.key, item.value));
-        }
 
-        if (data) {
+
+        if (data)
           request.send(data);
-        }
+
 
         // request.set('Access-Control-Allow-Origin', config.host);
         // request.withCredentials();

@@ -69,12 +69,12 @@ server.on('upgrade', (req, socket, head) => {
 
 // added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
 proxy.on('error', (error, req, res) => {
-  if (error.code !== 'ECONNRESET') {
+  if (error.code !== 'ECONNRESET')
     console.error('proxy error', error);
-  }
-  if (!res.headersSent) {
+
+  if (!res.headersSent)
     res.writeHead(500, { 'content-type': 'application/json' });
-  }
+
 
   const json = { error: 'proxy_error', reason: error.message };
   res.end(JSON.stringify(json));
@@ -100,18 +100,18 @@ app.use((req, res) => {
       ${ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} store={store} />)}`);
   }
 
-  if (__DISABLE_SSR__) {
+  if (__DISABLE_SSR__)
     return hydrateOnClient();
-  }
+
 
   match({
     history,
     routes: getRoutes(store),
     location: req.originalUrl
   }, (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
+    if (redirectLocation)
       res.redirect(redirectLocation.pathname + redirectLocation.search);
-    } else if (error) {
+    else if (error) {
       console.error('ROUTER ERROR:', pretty.render(error));
       res.status(500);
       hydrateOnClient();
@@ -139,20 +139,19 @@ app.use((req, res) => {
         res.status(500);
         hydrateOnClient();
       });
-    } else {
+    } else
       res.status(404).send('Not found');
-    }
   });
 });
 
 if (config.port) {
   server.listen(config.port, err => {
-    if (err) {
+    if (err)
       console.error(err);
-    }
+
     console.info('----\n==> ✅  %s is running, talking to API server on %s.', config.app.title, config.apiPort);
     console.info('==> 💻  Open %s in a browser to view the app.', config.host);
   });
-} else {
+} else
   console.error('==>     ERROR: No PORT environment variable has been specified');
-}
+

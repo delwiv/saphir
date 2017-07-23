@@ -5,9 +5,9 @@ let didWarnAboutReceivingStore = false;
 
 function warning(message) {
   /* eslint-disable no-console */
-  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+  if (typeof console !== 'undefined' && typeof console.error === 'function')
     console.error(message);
-  }
+
   /* eslint-enable no-console */
   try {
     // This error was thrown as a convenience so that if you enable
@@ -20,9 +20,9 @@ function warning(message) {
 }
 
 function warnAboutReceivingStore() {
-  if (didWarnAboutReceivingStore) {
+  if (didWarnAboutReceivingStore)
     return;
-  }
+
   didWarnAboutReceivingStore = true;
 
   warning(
@@ -83,9 +83,8 @@ export default class Provider extends Component {
       const { store } = this;
       const { store: nextStore } = nextProps;
 
-      if (store !== nextStore) {
+      if (store !== nextStore)
         warnAboutReceivingStore();
-      }
     }
   }
 

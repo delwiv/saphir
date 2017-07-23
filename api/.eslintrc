@@ -1,5 +1,4 @@
 {
-  "extends": "eslint-config-airbnb",
   "env": {
     "browser": false,
     "node": true,
@@ -33,7 +32,7 @@
     "no-alert": "off",
     "max-len": ["error", 120],
     "indent": ["error", 2, {"SwitchCase": 1}],
-    "semi": "never"
+    "curly": [1, "multi-or-nest"]
   },
   "plugins": [
     "import"

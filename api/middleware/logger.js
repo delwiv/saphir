@@ -7,9 +7,9 @@ export default function logger(app) {
   app.logger = pretty;
 
   return (error, req, res, next) => {
-    if (error && error.code !== 404) {
+    if (error && error.code !== 404)
       console.error('API ERROR:', pretty.render(error));
-    }
+
 
     next(error);
   };

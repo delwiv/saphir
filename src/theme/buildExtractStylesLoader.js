@@ -4,9 +4,9 @@
  * @returns {string}
  */
 function encodeLoader(loader) {
-  if (typeof loader === 'string') {
+  if (typeof loader === 'string')
     return loader;
-  }
+
 
   if (typeof loader.options !== 'undefined') {
     const query = Object
@@ -29,9 +29,9 @@ module.exports = function buildExtractStylesLoader(loaders) {
   const restLoaders = loaders
     .slice(2)
     .map(loader => {
-      if (typeof loader === 'string') {
+      if (typeof loader === 'string')
         return loader;
-      }
+
       return encodeLoader(loader);
     });
 

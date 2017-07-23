@@ -9,9 +9,8 @@ import * as chatActions from 'redux/modules/chat';
   promise: ({ store: { dispatch, getState } }) => {
     const state = getState();
 
-    if (state.online) {
+    if (state.online)
       return dispatch(chatActions.load());
-    }
   }
 }])
 @connect(
