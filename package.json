@@ -142,7 +142,7 @@
     "morgan": "^1.8.1",
     "multireducer": "^3.1.0",
     "nedb": "^1.8.0",
-    "node-twitchtv": "git+ssh://git@github.com:delwiv/node-twitchtv.git#refactor",
+    "node-twitchtv": "https://github.com/delwiv/node-twitchtv.git#refactor",
     "passport-facebook-token": "^3.3.0",
     "passport-twitch": "^1.0.3",
     "passport-twitch-token": "^2.1.0",
