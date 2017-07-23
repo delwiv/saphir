@@ -19,17 +19,23 @@ import ApiClient from 'helpers/ApiClient';
 import Html from 'helpers/Html';
 import getRoutes from 'routes';
 import { createApp } from 'app';
+// import cors from 'cors';
+
+require('dotenv').config()
 
 process.on('unhandledRejection', error => console.error(error));
 
-const targetUrl = `http://${config.apiHost}:${config.apiPort}`;
+const targetUrl = config.apiHost;
 const pretty = new PrettyError();
 const app = express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({
   target: targetUrl,
-  ws: true
+  ws: true,
+  changeOrigin: true
 });
+
+// app.use(cors());
 
 app.use(cookieParser());
 app.use(compression());
@@ -145,7 +151,7 @@ if (config.port) {
       console.error(err);
     }
     console.info('----\n==> ✅  %s is running, talking to API server on %s.', config.app.title, config.apiPort);
-    console.info('==> 💻  Open http://%s:%s in a browser to view the app.', config.host, config.port);
+    console.info('==> 💻  Open %s in a browser to view the app.', config.host);
   });
 } else {
   console.error('==>     ERROR: No PORT environment variable has been specified');

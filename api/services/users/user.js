@@ -5,6 +5,7 @@ const Mixed = Schema.Types.Mixed
 const User = new Schema({
   name: String,
   email: String,
+  auth: {},
   games: [{
     // https://github.com/igdb/igdb-api-node
     name: String,

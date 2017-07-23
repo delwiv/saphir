@@ -1,6 +1,6 @@
-import errorHandler from 'feathers-errors/handler';
-import notFound from './notFound';
-import logger from './logger';
+import errorHandler from 'feathers-errors/handler'
+import notFound from './notFound'
+import logger from './logger'
 
 export default function middleware() {
   const app = this;

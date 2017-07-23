@@ -14,6 +14,9 @@ const REGISTER_FAIL = 'redux-example/auth/REGISTER_FAIL';
 const LOGOUT = 'redux-example/auth/LOGOUT';
 const LOGOUT_SUCCESS = 'redux-example/auth/LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'redux-example/auth/LOGOUT_FAIL';
+const GETTWITCHURL = 'redux-example/auth/GETTWITCHURL';
+const GETTWITCHURL_SUCCESS = 'redux-example/auth/GETTWITCHURL_SUCCESS';
+const GETTWITCHURL_FAIL = 'redux-example/auth/GETTWITCHURL_FAIL';
 
 const initialState = {
   loaded: false
@@ -93,6 +96,23 @@ export default function reducer(state = initialState, action = {}) {
         loggingOut: false,
         logoutError: action.error
       };
+    case GETTWITCHURL:
+      return {
+        ...state,
+        gettingTwitchUrl: true,
+        twitchUrl: null
+      };
+    case GETTWITCHURL_SUCCESS:
+      return {
+        ...state,
+        twitchUrl: action.result.url,
+        gettingTwitchUrl: false
+      };
+    case GETTWITCHURL_FAIL:
+      return {
+        ...state,
+        gettingTwitchUrl: false
+      };
     default:
       return state;
   }
@@ -137,9 +157,24 @@ function setUser({ app, restApp }) {
   };
 }
 
+function setTwitchUrl({ app, restApp }) {
+  return response => {
+    app.set('twitchUrl', response.url);
+    restApp.set('twitchUrl', response.url);
+    return response;
+  }
+}
 /*
 * Actions
 * * * * */
+
+export function getTwitchUrl() {
+  return {
+    types: [GETTWITCHURL, GETTWITCHURL_SUCCESS, GETTWITCHURL_FAIL],
+    promise: ({ client, app, restApp }) => client.get('/auth/twitch', { cors: true })
+      .then(setTwitchUrl({ app, restApp }))
+  };
+}
 
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;

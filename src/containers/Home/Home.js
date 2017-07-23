@@ -10,23 +10,29 @@ import { Grid, Cell } from 'react-mdl';
 
 @connect(
   state => ({
-    online: state.online
+    online: state.online,
+    routing: state.routing
   })
 )
 export default class Home extends Component {
 
   static propTypes = {
-    online: PropTypes.bool.isRequired
+    online: PropTypes.bool.isRequired,
+    routing: PropTypes.object
   };
 
   render() {
-    const { online } = this.props;
+    const { online, routing } = this.props;
+    const { query } = routing.locationBeforeTransitions;
+    console.log({ query });
+
     const styles = require('./Home.scss');
     // require the logo image both from client and server
     const logoImage = require('./logo.png');
     return (
       <div className={styles.home}>
         <Helmet title="Home" />
+        {query && Object.keys(query).map(k => (<p><strong>{k}</strong>{`  ${query[k]}`}</p>))}
         <div className={styles.masthead}>
           <div className="container">
             <div className={styles.logo}>

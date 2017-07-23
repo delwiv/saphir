@@ -6,6 +6,19 @@ const env = [
   'MONGO_PORT',
   'MONGO_HOST',
   'MONGO_DB',
+  'OAUTH_REDIRECT_PATH',
+  'REDIS_PORT',
+  'REDIS_HOST',
+  'REDIS_PW',
+  'SAPHIR_API_HOST',
+  'SAPHIR_API_PORT',
+  'SAPHIR_APP_HOST',
+  'SAPHIR_APP_PORT',
+  'SAPHIR_SECRET',
+  'SAPHIR_OAUTH_ENDPOINT',
+  'TWITCH_CLIENT_ID',
+  'TWITCH_CLIENT_SECRET',
+  'TWITCH_PUBLIC_KEY'
   // 'MONGO_USER',
   // 'MONGO_PASS',
   // 'API_PORT',
@@ -41,6 +54,13 @@ export default () => {
         scope: ['public_profile', 'email'],
         profileFields: ['id', 'displayName', 'photos', 'email', 'first_name', 'last_name', 'age_range'],
         accessTokenField: 'accessToken'
+      },
+      twitch: {
+        path: '/auth/twitch',
+        clientID: config.TWITCH_CLIENT_ID,
+        clientSecret: config.TWITCH_CLIENT_SECRET,
+        callbackURL: `${config.SAPHIR_APP_HOST}/api/auth/twitch/callback`,
+        scope: 'user_read'
       }
     }
   }

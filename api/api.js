@@ -16,6 +16,9 @@ import { mapUrl } from './utils/url.js'
 import auth, { socketAuth } from './services/authentication'
 import mongoose from 'mongoose'
 import bluebird from 'bluebird'
+import redis from './redis'
+import twitch from './lib/twitch'
+import cors from 'cors'
 require('dotenv').config()
 
 global.Promise = bluebird
@@ -30,14 +33,9 @@ const appConfig = config()
 
 const setConfig = () => {
   app.set('config', appConfig)
+    .use(cors())
     .use(morgan('dev'))
     .use(cookieParser())
-    .use(session({
-      secret: 'react and redux rule!!!!',
-      resave: false,
-      saveUninitialized: false,
-      cookie: { maxAge: 60000 }
-    }))
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
 }
@@ -81,12 +79,14 @@ const actionsHandler = (req, res, next) => {
 
 const configure = () => {
   app.configure(hooks())
+    .configure(redis)
     .configure(rest())
     .configure(socketio({ path: '/ws' }))
     .configure(auth)
     .use(actionsHandler)
     .configure(services)
     .configure(middleware)
+    .configure(twitch)
 
   if (process.env.APIPORT) {
     app.listen(process.env.APIPORT, err => {

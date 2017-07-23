@@ -10,10 +10,10 @@ const environment = {
 }[process.env.NODE_ENV || 'development'];
 
 module.exports = Object.assign({
-  host: process.env.HOST || 'localhost',
-  port: process.env.PORT,
-  apiHost: process.env.APIHOST || 'localhost',
-  apiPort: process.env.APIPORT,
+  host: process.env.SAPHIR_APP_HOST,
+  port: process.env.SAPHIR_APP_PORT,
+  apiHost: process.env.SAPHIR_API_HOST,
+  apiPort: process.env.SAPHIR_API_PORT,
   app: {
     title: 'Saphir',
     description: 'E-sports Team Manager',
@@ -36,3 +36,5 @@ module.exports = Object.assign({
     }
   }
 }, environment);
+
+console.log({ config: module.exports })

@@ -6,24 +6,37 @@ import LoginForm from 'components/LoginForm/LoginForm';
 import FacebookLogin from 'components/FacebookLogin/FacebookLogin';
 import * as authActions from 'redux/modules/auth';
 import * as notifActions from 'redux/modules/notifs';
+import { Button } from 'react-mdl';
+import { Link } from 'react-router';
 
 @connect(
-  state => ({ user: state.auth.user }),
+  state => ({ user: state.auth.user, twitchUrl: state.auth.twitchUrl }),
   { ...notifActions, ...authActions })
 export default class Login extends Component {
   static propTypes = {
     user: PropTypes.object,
+    twitchUrl: PropTypes.string,
     login: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
+    getTwitchUrl: PropTypes.func.isRequired,
     notifSend: PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    user: null
+    user: null,
+    twitchUrl: null
   }
 
   static contextTypes = {
     router: PropTypes.object
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log({ nextProps })
+    if (nextProps.twitchUrl) {
+      console.log(nextProps.twitchUrl)
+      window.open(nextProps.twitchUrl, 'Login with Twitch')
+    }
   }
 
   onFacebookLogin = (err, data) => {
@@ -59,6 +72,7 @@ export default class Login extends Component {
 
   render() {
     const { user, logout } = this.props;
+
     return (
       <div className="container">
         <Helmet title="Login" />
@@ -73,6 +87,9 @@ export default class Login extends Component {
             onLogin={this.onFacebookLogin}
             component={this.FacebookLoginButton}
           />
+          <a href="/api/auth/twitch">
+            <Button><span>Login with Twitch</span></Button>
+          </a>
         </div>
         }
         {user && <div>
