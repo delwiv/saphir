@@ -32,7 +32,7 @@
     "no-alert": "off",
     "max-len": ["error", 120],
     "indent": ["error", 2, {"SwitchCase": 1}],
-    "curly": [1, "multi-or-nest"]
+    "curly": [2, "multi-or-nest"]
   },
   "plugins": [
     "import"

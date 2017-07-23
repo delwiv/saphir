@@ -1,11 +1,13 @@
 import auth from 'feathers-authentication';
 import jwt from 'feathers-authentication-jwt';
 import local from 'feathers-authentication-local';
+import uuid from 'uuid/v1';
 import oauth2 from 'feathers-authentication-oauth2';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import { discard } from 'feathers-hooks-common';
-import uuid from 'uuid/v1';
+import { merge } from 'ramda';
 import User from '../users/user';
+import { setToken } from '../../lib/token';
 
 export socketAuth from './socketAuth';
 
@@ -43,14 +45,17 @@ export default function authenticationService() {
   const getUserFromTwitch = async (accessToken, refreshToken) => {
     const user = await app.get('twitchClient').getUser(accessToken);
 
-    const existing = await User.findOne({ 'rawTwitch._id': user._id });
+    const existing = await User.findOne({ rawTwitch: { _id: user._id } });
 
     if (existing) {
-      console.log('updating auth data')
+      console.log('updating existing user twitch data')
       if (!existing.auth)
         existing.auth = {};
+      if (!existing.rawTwitch)
+        existing.rawTwitch = {};
 
       existing.auth.twitch = { accessToken, refreshToken };
+      existing.rawTwitch = merge(existing.rawTwitch, user);
       return existing.save();
     }
     console.log('create new user')
@@ -83,10 +88,10 @@ export default function authenticationService() {
       }));
 
       const user = await getUserFromTwitch(access_token, refresh_token);
-      const uid = uuid();
-      await app.get('redis').setAsync(uid, user._id);
 
-      res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/me?token=${uid}`);
+      const token = await setToken(app.get('redis'), user._id);
+
+      res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/me?token=${token}`);
     } catch (error) {
       console.log({ error });
 

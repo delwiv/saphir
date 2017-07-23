@@ -18,6 +18,7 @@ import { mapUrl } from './utils/url.js'
 import auth, { socketAuth } from './services/authentication'
 import redis from './redis'
 import twitch from './lib/twitch'
+import security from './lib/token'
 require('dotenv').config()
 
 global.Promise = bluebird
@@ -37,6 +38,7 @@ const setConfig = () => {
     .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
+    .use(security(app))
 }
 
 const actionsHandler = (req, res, next) => {

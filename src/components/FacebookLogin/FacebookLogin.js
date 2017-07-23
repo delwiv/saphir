@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-mdl';
 
 class FacebookLogin extends Component {
   static propTypes = {
@@ -82,9 +83,9 @@ class FacebookLogin extends Component {
     if (WrappedComponent) return <WrappedComponent facebookLogin={this.click} />;
 
     return (
-      <button className={className} onClick={this.click} type={typeButton}>
+      <Button raised ripple className={className} onClick={this.click} type={typeButton}>
         {textButton}
-      </button>
+      </Button>
     );
   }
 }

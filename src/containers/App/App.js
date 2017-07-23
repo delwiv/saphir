@@ -60,11 +60,7 @@ export default class App extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.user && nextProps.user) {
-      // login
-      const redirect = this.props.router.location.query && this.props.router.location.query.redirect;
-      this.props.pushState(redirect || '/');
-    } else if (this.props.user && !nextProps.user) {
+    if (this.props.user && !nextProps.user) {
       // logout
       this.props.pushState('/');
     }

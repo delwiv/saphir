@@ -54,6 +54,7 @@ export default store => {
           )}
         />
       </Route>
+      <Route path="me" getComponent={() => System.import('./containers/Me/Me')} />
 
       {/* Routes disallow login */}
       <Route {...permissionsComponent(isNotAuthenticated)()}>

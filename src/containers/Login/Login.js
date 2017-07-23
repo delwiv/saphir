@@ -63,9 +63,17 @@ export default class Login extends Component {
   };
 
   FacebookLoginButton = ({ facebookLogin }) => (
-    <button className="btn btn-primary" onClick={facebookLogin}>
+    <Button
+      raised
+      ripple
+      onClick={facebookLogin}
+      style={{
+        backgroundColor: '#3b5998',
+        color: '#ffffff'
+      }}
+    >
       Login with <i className="fa fa-facebook-f" />
-    </button>
+    </Button>
   );
 
   render() {
@@ -86,7 +94,16 @@ export default class Login extends Component {
             component={this.FacebookLoginButton}
           />
           <a href="/api/auth/twitch">
-            <Button><span>Login with Twitch</span></Button>
+            <Button
+              raised
+              ripple
+              style={{
+                backgroundColor: '#4b367c',
+                color: '#ffffff'
+              }}
+            >
+              <span>Login with <i className="fa fa-twitch" style={{ width: '24px' }} /></span>
+            </Button>
           </a>
         </div>
         }

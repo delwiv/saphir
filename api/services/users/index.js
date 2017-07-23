@@ -13,6 +13,16 @@ export default function userService() {
     }
   }
 
+  app.get('/users/me', async (req, res, next) => {
+    try {
+      const userId = req.userId;
+      const user = await User.findById(userId);
+      res.json({ user });
+    } catch (error) {
+      next(error)
+    }
+  })
+
   app.use('/users', service(options))
 
   app.service('users').hooks(hooks)
