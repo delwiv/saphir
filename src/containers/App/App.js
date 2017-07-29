@@ -18,7 +18,7 @@ import {
   FooterLinkList,
   FooterDropDownSection,
   Navigation,
-  Drawer
+  // Drawer
 } from 'react-mdl';
 
 @asyncConnect([{
@@ -44,7 +44,7 @@ import {
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
-    router: PropTypes.object.isRequired,
+    // router: PropTypes.object.isRequired,
     user: PropTypes.object,
     notifs: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
@@ -106,7 +106,7 @@ export default class App extends Component {
               expandableIcon="search"
             />*/}
           </Header>
-          <Drawer>
+          {/* <Drawer>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <div className={styles.brand} />
@@ -123,7 +123,7 @@ export default class App extends Component {
                 </span>
               </IndexLink>}
             </Navigation>
-          </Drawer>
+          </Drawer>*/}
           <div className={styles.appContent}>
             {notifs.global && <div className="container">
               <Notifs

@@ -1,3 +1,4 @@
+import cookie from 'js-cookie';
 import superagent from 'superagent';
 import config from '../config';
 
@@ -19,6 +20,9 @@ export default class ApiClient {
       this[method] = (path, { params, data, headers, files, fields } = {}) => new Promise((resolve, reject) => {
         const request = superagent[method](formatUrl(path));
 
+        if (!this.token)
+          this.setToken(cookie.get('authorization'));
+
         if (params)
           request.query(params);
 
@@ -32,7 +36,7 @@ export default class ApiClient {
 
 
         if (this.token)
-          request.set('Authorization', `Bearer ${this.token}`);
+          request.set('authorization', `Bearer ${this.token}`);
 
 
         if (files)
@@ -46,12 +50,19 @@ export default class ApiClient {
         if (data)
           request.send(data);
 
-        request.end((err, { body } = {}) => (err ? reject(body || err) : resolve(body)));
+        console.log({request})
+
+        request.end((err, { body } = {}) => (
+          err ? reject(body || err) : resolve(body))
+        );
       });
     });
   }
 
-  setJwtToken(token) {
-    this.token = token;
+  setToken(token) {
+    if (token) {
+      console.log({ setToken: token })
+      this.token = token;
+    }
   }
 }

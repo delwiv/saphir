@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import LoginForm from 'components/LoginForm/LoginForm';
-import FacebookLogin from 'components/FacebookLogin/FacebookLogin';
+// import FacebookLogin from 'components/FacebookLogin/FacebookLogin';
 import * as authActions from 'redux/modules/auth';
 import * as notifActions from 'redux/modules/notifs';
 import { Button } from 'react-mdl';
@@ -37,19 +37,19 @@ export default class Login extends Component {
     }
   }
 
-  onFacebookLogin = (err, data) => {
-    if (err) return;
-    this.props.login('facebook', data, false)
-      .then(this.successLogin)
-      .catch(error => {
-        if (error.message === 'Incomplete oauth registration') {
-          this.context.router.push({
-            pathname: '/register',
-            state: { oauth: error.data }
-          });
-        }
-      });
-  };
+//  onFacebookLogin = (err, data) => {
+//    if (err) return;
+//    this.props.login('facebook', data, false)
+//      .then(this.successLogin)
+//      .catch(error => {
+//        if (error.message === 'Incomplete oauth registration') {
+//          this.context.router.push({
+//            pathname: '/register',
+//            state: { oauth: error.data }
+//          });
+//        }
+//      });
+//  };
 
   login = data => this.props.login('local', data).then(this.successLogin);
 
@@ -62,19 +62,19 @@ export default class Login extends Component {
     return data;
   };
 
-  FacebookLoginButton = ({ facebookLogin }) => (
-    <Button
-      raised
-      ripple
-      onClick={facebookLogin}
-      style={{
-        backgroundColor: '#3b5998',
-        color: '#ffffff'
-      }}
-    >
-      Login with <i className="fa fa-facebook-f" />
-    </Button>
-  );
+//  FacebookLoginButton = ({ facebookLogin }) => (
+//    <Button
+//      raised
+//      ripple
+//      onClick={facebookLogin}
+//      style={{
+//        backgroundColor: '#3b5998',
+//        color: '#ffffff'
+//      }}
+//    >
+//      Login with <i className="fa fa-facebook-f" />
+//    </Button>
+//  );
 
   render() {
     const { user, logout } = this.props;
@@ -86,13 +86,12 @@ export default class Login extends Component {
         {!user && <div>
           <LoginForm onSubmit={this.login} />
           <p>This will "log you in" as this user, storing the username in the session of the API server.</p>
-          <FacebookLogin
-            appId="635147529978862"
-            /* autoLoad={true} */
-            fields="name,email,picture"
-            onLogin={this.onFacebookLogin}
-            component={this.FacebookLoginButton}
-          />
+          {/* <FacebookLogin
+              appId="635147529978862"
+              fields="name,email,picture"
+              onLogin={this.onFacebookLogin}
+              component={this.FacebookLoginButton}
+          /> */}
           <a href="/api/auth/twitch">
             <Button
               raised

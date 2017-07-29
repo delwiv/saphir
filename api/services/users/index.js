@@ -1,29 +1,24 @@
-import service from 'feathers-mongoose'
+import { Router } from 'express'
 import User from './user'
-import hooks from './hooks'
+import type { NextFunction, $Response, $Request } from 'express'
 
-export default function userService() {
-  const app = this
+const router = Router()
 
-  const options = {
-    Model: User,
-    paginate: {
-      default: 10,
-      max: 25
-    }
+router.get('/me', async (req: $Request, res: $Response, next: NextFunction) => {
+  try {
+    const { uid } = res.locals;
+    console.log({ uid });
+    const user = await User.findOne({ uid })
+    if (!user)
+      return res.boom.notFound('User not found')
+
+    console.log({ user: user.publicObject() });
+    res.json({ user: user.publicObject() });
+  } catch (error) {
+    console.log({ error })
+    next(error)
   }
+})
 
-  app.get('/users/me', async (req, res, next) => {
-    try {
-      const userId = req.userId;
-      const user = await User.findById(userId);
-      res.json({ user });
-    } catch (error) {
-      next(error)
-    }
-  })
 
-  app.use('/users', service(options))
-
-  app.service('users').hooks(hooks)
-}
+export default router;

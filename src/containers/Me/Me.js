@@ -5,48 +5,153 @@ import PropTypes from 'prop-types';
 // import config from 'config';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+// import { asyncConnect } from 'redux-connect';
+import { equals } from 'ramda'
 // import { CardLink } from 'components';
-// import { Grid, Cell } from 'react-mdl';
-import { setTokenAndFetchUser } from 'redux/modules/auth';
+import { Grid, Cell, Textfield, Button } from 'react-mdl';
+import { fetchUser, saveUser } from 'redux/modules/auth';
+
+// @asyncConnect([{
+//   promise: ({ store: { dispatch } }) => dispatch(fetchUser())
+// }])
 
 @connect(
   state => ({
-    online: state.online,
     query: state.routing.locationBeforeTransitions.query,
-    token: state.auth.token
+    user: state.auth.user,
+    token: state.auth.token,
+    fetching: state.auth.fetchingMe
   }), {
-    setTokenAndFetchUser
+    fetchUser,
+    saveUser,
   }
 )
 export default class Me extends Component {
 
   static propTypes = {
-    online: PropTypes.bool.isRequired,
-    query: PropTypes.object.isRequired,
-    token: PropTypes.string,
-    setTokenAndFetchUser: PropTypes.func.isRequired
+    user: PropTypes.object,
+    fetchUser: PropTypes.func.isRequired,
+    saveUser: PropTypes.func.isRequired,
+    // fetching: PropTypes.bool
   };
 
   static defaultProps = {
-    token: null
+    user: {},
+    fetching: false
   }
 
+  constructor(props) {
+    super(props);
+    this.state = { user: props.user };
+  }
+
+  componentDidMount() {
+    if (equals({}, this.props.user))
+      this.props.fetchUser();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user && !equals(nextProps.user, this.props.user))
+      this.setState({ user: nextProps.user });
+  }
+
+  saveUser() {
+    this.props.saveUser(this.state.user);
+  }
+
+  cancel() {
+    this.setState({ user: this.props.user });
+  }
 
   render() {
-    const { online, query, token } = this.props;
-    if (query.token && !token) {
-      console.log('got token to save :', query.token)
-      this.props.setTokenAndFetchUser(query.token);
-    }
+    const { user } = this.state;
 
     const styles = require('./Me.scss');
     // require the logo image both from client and server
-    const logoImage = require('./logo.png');
     return (
       <div className={styles.me}>
         <Helmet title="Me" />
-        {query && Object.keys(query).map(k => (<p key={k}><strong>{k}</strong>{`  ${query[k]}`}</p>))}
-        Online: {` ${online.toString()}`}
+        <h1>My profile</h1>
+        <Button
+          raised
+          ripple
+          colored
+          onClick={this.props.fetchUser}
+        >Reload</Button>
+        {/* query && Object.keys(query).map(k => (<p key={k}><strong>{k}</strong>{`  ${query[k]}`}</p>)) */}
+        {/* user && Object.keys(user).map(k => (<p key={k}><strong>{k}</strong>{`  ${user[k]}`}</p>)) */}
+        <div>
+          <Grid>
+            <Cell
+              col={6}
+              phone={12}
+              offsetDesktop={3}
+              offsetTablet={0}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                // alignItems: 'center',
+                // justifyContent: 'center'
+              }}
+            >
+              <Textfield
+                floatingLabel
+                label="Name"
+                value={user.name}
+                style={{ width: '100%' }}
+              />
+              <Textfield
+                floatingLabel
+                label="E-mail"
+                value={user.email}
+                style={{ width: '100%' }}
+              />
+            </Cell>
+            <Cell
+              col={6}
+              phone={12}
+              offsetDesktop={3}
+              offsetTablet={0}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                // alignItems: 'center',
+                // justifyContent: 'center'
+              }}
+            >
+              <Textfield
+                label="Bio"
+                floatingLabel
+                placeholder="Write something about yourself, and your gaming experience"
+                rows={5}
+                style={{ width: '100%' }}
+                value={user.bio || ''}
+              />
+            </Cell>
+          </Grid>
+          <div
+            style={{
+              display: 'flex',
+              alignSelf: 'stretch',
+              justifyContent: 'center'
+            }}
+          >
+
+            <Button
+              raised
+              ripple
+              accent
+              onClick={this.cancel}
+            >Cancel</Button>
+            <Button
+              raised
+              ripple
+              colored
+              onClick={this.saveUser}
+            >Save profile</Button>
+          </div>
+        </div>}
+
       </div>
     );
   }

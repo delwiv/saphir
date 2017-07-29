@@ -1,11 +1,15 @@
 import mongoose, { Schema } from 'mongoose'
+import { pick } from 'ramda'
+import uuid from 'uuid/v4'
 
 const Mixed = Schema.Types.Mixed
 
 const User = new Schema({
+  uid: { type: String, default: uuid },
   name: String,
   email: String,
   auth: {},
+  bio: String,
   games: [{
     // https://github.com/igdb/igdb-api-node
     name: String,
@@ -26,5 +30,22 @@ const User = new Schema({
   strict: false,
   collection: 'users'
 })
+
+const publicFields = [
+  'name',
+  'email',
+  'bio',
+  'games',
+  'genres',
+  'hardware',
+  'logo',
+  'uid'
+]
+
+User.methods = {
+  publicObject() {
+    return pick(publicFields, this)
+  }
+}
 
 export default mongoose.model('User', User)

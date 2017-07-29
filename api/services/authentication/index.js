@@ -1,79 +1,43 @@
-import auth from 'feathers-authentication';
-import jwt from 'feathers-authentication-jwt';
-import local from 'feathers-authentication-local';
-import uuid from 'uuid/v1';
-import oauth2 from 'feathers-authentication-oauth2';
-import FacebookTokenStrategy from 'passport-facebook-token';
-import { discard } from 'feathers-hooks-common';
-import { merge } from 'ramda';
+// @flow
+import uuid from 'uuid/v4';
+import { merge, pick } from 'ramda';
+
 import User from '../users/user';
-import { setToken } from '../../lib/token';
+import { setDataForToken } from '../../lib/security';
+import socketAuth from './socketAuth';
 
-export socketAuth from './socketAuth';
+export { socketAuth };
 
-function populateUser(authConfig) {
-  return hook => hook.app.passport.verifyJWT(hook.result.accessToken, authConfig)
-    .then(payload => hook.app.service('users').get(payload.userId))
-    .then(user => {
-      hook.result.user = user;
-    });
-}
+const TWITCH_FIELDS = ['email', 'name', 'bio', 'logo'];
 
-function restToSocketAuth() {
-  return hook => {
-    if (hook.params.provider !== 'rest') return hook;
-    const { accessToken, user } = hook.result;
-    const { socketId } = hook.data;
-    if (socketId && hook.app.io && accessToken) {
-      const userSocket = Object.values(hook.app.io.sockets.connected).find(socket => socket.client.id === socketId);
-      if (userSocket) {
-        Object.assign(userSocket.feathers, {
-          accessToken,
-          user,
-          authenticated: true
-        });
-      }
-    }
-    return hook;
-  };
-}
+const extractTwitchFields = pick(TWITCH_FIELDS);
 
 
 export default function authenticationService() {
   const app = this;
 
-  const getUserFromTwitch = async (accessToken, refreshToken) => {
-    const user = await app.get('twitchClient').getUser(accessToken);
+  const getUserFromTwitch = async (accessToken: string, refreshToken: string): User => {
+    const userFromTwitch = await app.get('twitchClient').getUser(accessToken);
 
-    const existing = await User.findOne({ rawTwitch: { _id: user._id } });
+    const existing = await User.findOne({ twitch_id: userFromTwitch._id });
 
     if (existing) {
       console.log('updating existing user twitch data')
-      if (!existing.auth)
-        existing.auth = {};
+      Object.assign(existing, extractTwitchFields(userFromTwitch), { ...existing, twitchId: userFromTwitch._id });
       if (!existing.rawTwitch)
         existing.rawTwitch = {};
 
-      existing.auth.twitch = { accessToken, refreshToken };
-      existing.rawTwitch = merge(existing.rawTwitch, user);
+      existing.authTwitch = { accessToken, refreshToken };
+      existing.rawTwitch = merge(existing.rawTwitch, userFromTwitch);
       return existing.save();
     }
     console.log('create new user')
     return User.create({
-      rawTwitch: user, auth: { twitch: { accessToken, refreshToken } }
+      ...extractTwitchFields(userFromTwitch),
+      rawTwitch: userFromTwitch,
+      authTwitch: { accessToken, refreshToken }
     });
   }
-
-
-  const config = app.get('config').auth;
-
-  app.configure(auth(config))
-    .configure(jwt())
-    .configure(local())
-    .configure(oauth2({
-      name: 'facebook', // if the name differs from your config key you need to pass your config options explicitly
-      Strategy: FacebookTokenStrategy
-    }));
 
 
   app.get('/auth/twitch', (req, res) => {
@@ -89,29 +53,61 @@ export default function authenticationService() {
 
       const user = await getUserFromTwitch(access_token, refresh_token);
 
-      const token = await setToken(app.get('redis'), user._id);
+      const token = await setDataForToken(app.get('redis'), user.uid, 'userToken');
 
-      res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/me?token=${token}`);
+      res.cookie('authorization', token);
+
+      res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/me`);
     } catch (error) {
       console.log({ error });
 
       res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/?error=${error.message}`);
     }
   });
-
-  app.service('authentication')
-    .hooks({
-      before: {
-        // You can chain multiple strategies on create method
-        create: auth.hooks.authenticate(['jwt', 'local', 'facebook']),
-        remove: auth.hooks.authenticate('jwt')
-      },
-      after: {
-        create: [
-          populateUser(config),
-          discard('user.password'),
-          restToSocketAuth()
-        ]
-      }
-    });
 }
+
+// import auth from 'feathers-authentication';
+// import jwt from 'feathers-authentication-jwt';
+// import local from 'feathers-authentication-local';
+
+// import oauth2 from 'feathers-authentication-oauth2';
+// import FacebookTokenStrategy from 'passport-facebook-token';
+// import { discard } from 'feathers-hooks-common';
+// function populateUser(authConfig) {
+//   return hook => hook.app.passport.verifyJWT(hook.result.accessToken, authConfig)
+//     .then(payload => hook.app.service('users').get(payload.userId))
+//     .then(user => {
+//       hook.result.user = user;
+//     });
+// }
+
+// function restToSocketAuth() {
+//   return hook => {
+//     if (hook.params.provider !== 'rest') return hook;
+//     const { accessToken, user } = hook.result;
+//     const { socketId } = hook.data;
+//     if (socketId && hook.app.io && accessToken) {
+//       const userSocket = Object.values(hook.app.io.sockets.connected).find(socket => socket.client.id === socketId);
+//       if (userSocket) {
+//         Object.assign(userSocket.feathers, {
+//           accessToken,
+//           user,
+//           authenticated: true
+//         });
+//       }
+//     }
+//     return hook;
+//   };
+// }
+
+
+// const config = app.get('config').auth;
+
+// app.configure(auth(config))
+//   .configure(jwt())
+//   .configure(local())
+//   .configure(oauth2({
+//     name: 'facebook', // if the name differs from your config key you need to pass your config options explicitly
+//     Strategy: FacebookTokenStrategy
+//   }));
+

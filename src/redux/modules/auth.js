@@ -17,6 +17,9 @@ const LOGOUT_FAIL = 'redux-example/auth/LOGOUT_FAIL';
 const FETCH_ME = 'redux-example/auth/FETCH_ME';
 const FETCH_ME_SUCCESS = 'redux-example/auth/FETCH_ME_SUCCESS';
 const FETCH_ME_FAIL = 'redux-example/auth/FETCH_ME_FAIL';
+const SAVE_USER = 'redux-example/auth/SAVE_USER';
+const SAVE_USER_SUCCESS = 'redux-example/auth/SAVE_USER_SUCCESS';
+const SAVE_USER_FAIL = 'redux-example/auth/SAVE_USER_FAIL';
 
 const initialState = {
   loaded: false
@@ -127,13 +130,13 @@ const catchValidation = error => {
   return Promise.reject(error);
 };
 
-function setToken({ client, app, restApp }) {
+function setToken({ app, restApp, client }) {
   return response => {
-    const { accessToken } = response;
+    const { token } = response;
 
-    app.set('accessToken', accessToken);
-    restApp.set('accessToken', accessToken);
-    client.setJwtToken(accessToken);
+    app.set('accessToken', token);
+    restApp.set('accessToken', token);
+    client.setToken(token);
 
     return response;
   };
@@ -159,15 +162,18 @@ function setUser({ app, restApp }) {
 /*
 * Actions
 * * * * */
-export function setTokenAndFetchUser(token) {
+export function fetchUser() {
   return {
     types: [FETCH_ME, FETCH_ME_SUCCESS, FETCH_ME_FAIL],
-    promise: ({ client, app, restApp }) => {
-      app.set('token', token);
-      restApp.set('token', token);
-      client.setJwtToken(token);
-      return client.get('/users/me');
-    }
+    promise: async ({ client, app, restApp }) => client.get('/users/me')
+    .then(setToken({ app, restApp, client }))
+  }
+}
+
+export function saveUser(user) {
+  return {
+    types: [SAVE_USER, SAVE_USER_SUCCESS, SAVE_USER_FAIL],
+    promise: ({ client }) => client.patch('/users/me', { user })
   }
 }
 
@@ -178,10 +184,10 @@ export function isLoaded(globalState) {
 export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: ({ app, restApp, client }) => restApp.authenticate()
-      .then(setToken({ client, app, restApp }))
-      .then(setCookie({ app }))
-      .then(setUser({ app, restApp }))
+    promise: ({ app, restApp, client }) => Promise.resolve({
+      token: cookie.get('authorization')
+    })
+    .then(setToken({ client, app, restApp }))
   };
 }
 
@@ -211,7 +217,6 @@ export function login(strategy, data, validation = true) {
 export function logout() {
   return {
     types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: ({ client, app, restApp }) => app.logout()
-      .then(() => setToken({ client, app, restApp })({ accessToken: null }))
-  };
+    promise: ({ client, app, restApp }) => setToken({ client, app, restApp })({ accessToken: null })
+  }
 }

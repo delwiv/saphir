@@ -9,6 +9,7 @@ const env = [
   'REDIS_PORT',
   'REDIS_HOST',
   'REDIS_PW',
+  'REDIS_SECRET',
   'SAPHIR_API_HOST',
   'SAPHIR_API_PORT',
   'SAPHIR_APP_HOST',
