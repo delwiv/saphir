@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IndexLink } from 'react-router';
 import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from 'react-helmet';
-import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
+// import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
 import { Notifs } from 'components';
 import { push } from 'react-router-redux';
@@ -28,8 +28,8 @@ import {
     if (!isAuthLoaded(getState()))
       promises.push(dispatch(loadAuth()));
 
-    if (!isInfoLoaded(getState()))
-      promises.push(dispatch(loadInfo()));
+    // if (!isInfoLoaded(getState()))
+    //   promises.push(dispatch(loadInfo()));
 
     return Promise.all(promises);
   }
@@ -69,6 +69,7 @@ export default class App extends Component {
   handleLogout = event => {
     event.preventDefault();
     this.props.logout();
+    this.props.pushState('/');
   };
 
   render() {
@@ -90,11 +91,12 @@ export default class App extends Component {
               {!user && <IndexLink to="/register">
                 <span>Register</span>
               </IndexLink>}
-              {user && <IndexLink to="/logout">
-                <span role="button" tabIndex={0} className="logout-link" onClick={this.handleLogout}>
-                  Logout
-                </span>
+              {user && <IndexLink to="/me">
+                <span>My profile</span>
               </IndexLink>}
+              {user && <span role="button" tabIndex={0} className="logout-link" onClick={this.handleLogout}>
+                Logout
+              </span>}
             </Navigation>
             {/* <Textfield
               floatingLabel

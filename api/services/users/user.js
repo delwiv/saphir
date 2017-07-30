@@ -5,7 +5,8 @@ import uuid from 'uuid/v4'
 const Mixed = Schema.Types.Mixed
 
 const User = new Schema({
-  uid: { type: String, default: uuid },
+  uid: { type: String, default: uuid, index: true },
+  createdAt: { type: Date, default: Date.now },
   name: String,
   email: String,
   auth: {},
@@ -39,8 +40,15 @@ const publicFields = [
   'genres',
   'hardware',
   'logo',
-  'uid'
+  'uid',
+  'createdAt'
 ]
+
+User.statics = {
+  findByUid(uid) {
+    return this.findOne({ uid })
+  }
+}
 
 User.methods = {
   publicObject() {

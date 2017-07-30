@@ -3,7 +3,6 @@ import superagent from 'superagent';
 import config from '../config';
 
 const methods = ['get', 'post', 'put', 'patch', 'del'];
-
 function formatUrl(path) {
   const adjustedPath = path[0] !== '/' ? `/${path}` : path;
   if (__SERVER__) {
@@ -34,10 +33,13 @@ export default class ApiClient {
         if (headers)
           request.set(headers);
 
-
         if (this.token)
           request.set('authorization', `Bearer ${this.token}`);
 
+        if (this.twitchToken) {
+          request.set('twitch-authorization', `Bearer ${this.twitchToken}`);
+          this.twitchToken = null; // one time use
+        }
 
         if (files)
           files.forEach(file => request.attach(file.key, file.value));
@@ -50,19 +52,32 @@ export default class ApiClient {
         if (data)
           request.send(data);
 
-        console.log({request})
+        console.log({ headers: request.header })
 
         request.end((err, { body } = {}) => (
           err ? reject(body || err) : resolve(body))
         );
+      })
+      .then(result => {
+        const token = cookie.get('authorization')
+        if (token && token !== this.token)
+          this.setToken(token)
+        return result;
       });
     });
   }
 
   setToken(token) {
-    if (token) {
+    if (token !== undefined) {
       console.log({ setToken: token })
       this.token = token;
+    }
+  }
+
+  setTwitchToken(token) {
+    if (token !== undefined) {
+      console.log({ setTwitchToken: token })
+      this.twitchToken = token;
     }
   }
 }

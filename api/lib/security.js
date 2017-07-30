@@ -5,7 +5,8 @@ import { path } from 'ramda';
 import type { NextFunction, $Response, $Request, $Application } from 'express'
 const unsecuredRoutes = [
   '/auth/twitch',
-  '/auth/twitch/callback'
+  '/auth/twitch/callback',
+  '/users/all'
 ]
 
 export const setDataForToken = async (redis: RedisClient, value: string, prefix?: string) => {
@@ -41,30 +42,42 @@ export default function (app: $Application) {
   return async (req: $Request, res: $Response, next: NextFunction) => {
     if (unsecuredRoutes.includes(req.path))
       return next();
+
+    const redis = app.get('redis');
+    const authTwitch = path(['headers', 'twitch-authorization'], req);
+
+    if (authTwitch) {
+      const twitchToken = authTwitch.split('Bearer ')[1];
+      const uid = await getData(redis, twitchToken, 'twitchToken');
+
+      if (!uid)
+        return res.status(401).send('uid not found');
+
+      await deleteData(redis, twitchToken, 'twitchToken');
+
+      res.cookie('authorization', await setDataForToken(redis, uid, 'userToken'));
+      res.clearCookie('twitch-authorization');
+
+      res.locals.uid = uid;
+      return next();
+    }
+
     const auth = path(['headers', 'authorization'], req);
+
     if (!auth)
-      return res.status(401).json({ error: new Error('no authorization in headers') });
+      return res.status(401).json({ error: new Error('no `authorization` in headers') });
 
     const token = auth.split('Bearer ')[1];
 
     if (!token)
       return res.status(401).send('token is not valid');
 
-
-    const comesFromTwitch = req.path === '/users/me';
-
-    console.log({ comesFromTwitch });
-
-    const redis = app.get('redis');
-
-    let uid = null;
-
-    uid = await getData(redis, token, 'userToken');
+    const uid = await getData(redis, token, 'userToken');
 
     if (!uid)
       return res.status(401).send('uid not found');
 
-    res.cookie('authorization', comesFromTwitch ? await setDataForToken(redis, uid, 'userToken') : token);
+    res.cookie('authorization', token);
 
     res.locals.uid = uid;
 

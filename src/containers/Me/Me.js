@@ -43,6 +43,9 @@ export default class Me extends Component {
   constructor(props) {
     super(props);
     this.state = { user: props.user };
+    this.saveUser = this.saveUser.bind(this);
+    this.cancel = this.cancel.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
 
   componentDidMount() {
@@ -51,7 +54,9 @@ export default class Me extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user && !equals(nextProps.user, this.props.user))
+    if (nextProps.user &&
+      (!equals(nextProps.user, this.props.user) ||
+      !equals(nextProps.user, this.state.user)))
       this.setState({ user: nextProps.user });
   }
 
@@ -61,6 +66,17 @@ export default class Me extends Component {
 
   cancel() {
     this.setState({ user: this.props.user });
+  }
+
+  updateUser(field) {
+    return ({ target }) => {
+      this.setState({
+        user: {
+          ...this.state.user,
+          [field]: target.value
+        }
+      })
+    }
   }
 
   render() {
@@ -95,12 +111,14 @@ export default class Me extends Component {
               }}
             >
               <Textfield
+                onChange={this.updateUser('name')}
                 floatingLabel
                 label="Name"
                 value={user.name}
                 style={{ width: '100%' }}
               />
               <Textfield
+                onChange={this.updateUser('email')}
                 floatingLabel
                 label="E-mail"
                 value={user.email}
@@ -120,6 +138,7 @@ export default class Me extends Component {
               }}
             >
               <Textfield
+                onChange={this.updateUser('bio')}
                 label="Bio"
                 floatingLabel
                 placeholder="Write something about yourself, and your gaming experience"

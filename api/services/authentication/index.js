@@ -22,8 +22,8 @@ export default function authenticationService() {
     const existing = await User.findOne({ twitch_id: userFromTwitch._id });
 
     if (existing) {
-      console.log('updating existing user twitch data')
-      Object.assign(existing, extractTwitchFields(userFromTwitch), { ...existing, twitchId: userFromTwitch._id });
+      console.log('updating existing rawTwitch data')
+      // Object.assign(existing, extractTwitchFields(userFromTwitch), { ...existing, twitchId: userFromTwitch._id });
       if (!existing.rawTwitch)
         existing.rawTwitch = {};
 
@@ -35,7 +35,8 @@ export default function authenticationService() {
     return User.create({
       ...extractTwitchFields(userFromTwitch),
       rawTwitch: userFromTwitch,
-      authTwitch: { accessToken, refreshToken }
+      authTwitch: { accessToken, refreshToken },
+      twitch_id: userFromTwitch._id
     });
   }
 
@@ -53,9 +54,9 @@ export default function authenticationService() {
 
       const user = await getUserFromTwitch(access_token, refresh_token);
 
-      const token = await setDataForToken(app.get('redis'), user.uid, 'userToken');
+      const token = await setDataForToken(app.get('redis'), user.uid, 'twitchToken');
 
-      res.cookie('authorization', token);
+      res.cookie('twitch-authorization', token);
 
       res.redirect(`${app.get('config').env.SAPHIR_APP_HOST}/me`);
     } catch (error) {

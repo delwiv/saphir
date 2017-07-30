@@ -115,6 +115,22 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         fetchingMe: false
       };
+    case SAVE_USER:
+      return {
+        ...state,
+        saving: true
+      };
+    case SAVE_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.result.user,
+        saving: false
+      };
+    case SAVE_USER_FAIL:
+      return {
+        ...state,
+        saving: false
+      };
     default:
       return state;
   }
@@ -163,17 +179,23 @@ function setUser({ app, restApp }) {
 * Actions
 * * * * */
 export function fetchUser() {
+  const twitchToken = cookie.get('twitch-authorization');
+
   return {
     types: [FETCH_ME, FETCH_ME_SUCCESS, FETCH_ME_FAIL],
-    promise: async ({ client, app, restApp }) => client.get('/users/me')
-    .then(setToken({ app, restApp, client }))
+    promise: async ({ client, app, restApp }) => {
+      if (twitchToken)
+        client.setTwitchToken(twitchToken)
+      return client.get('/users/me')
+      .then(setToken({ app, restApp, client }))
+    }
   }
 }
 
 export function saveUser(user) {
   return {
     types: [SAVE_USER, SAVE_USER_SUCCESS, SAVE_USER_FAIL],
-    promise: ({ client }) => client.patch('/users/me', { user })
+    promise: ({ client }) => client.patch('/users/me', { data: user })
   }
 }
 
@@ -217,6 +239,11 @@ export function login(strategy, data, validation = true) {
 export function logout() {
   return {
     types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-    promise: ({ client, app, restApp }) => setToken({ client, app, restApp })({ accessToken: null })
+    promise: ({ client, app, restApp }) => Promise
+    .resolve(setToken({ client, app, restApp })({ token: null }))
+    .then(() => {
+      cookie.remove('authorization');
+      return Promise.resolve();
+    })
   }
 }
