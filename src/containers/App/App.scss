@@ -18,20 +18,22 @@
   }
 }
 
-.searchResult {
-  background-color: rgba(230, 230, 230, .8);
-  position: absolute;
-  z-index: 100;
-  top: 60px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  min-height: 0;
-  // max-height: 90vh;
-  overflow-y: scroll;
-  .searchResultRow {
+.searchResultContainer {
+  position: relative;
+  .searchResult {
+    background-color: rgba(230, 230, 230, .8);
+    position: absolute;
+    z-index: 100;
+    top: 60px;
+    width: 320px;
     display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    min-height: 0;
+    // max-height: 90vh;
+    .searchResultRow {
+      display: flex;
+    }
   }
 }
 

@@ -20,7 +20,7 @@ router.get('/', async (req: $Request, res: $Response, next: NextFunction) => {
     .skip(skip)
     .limit(10)
 
-    console.log({ result })
+    console.log({ count: result.length })
     res.json({ result });
   } catch (error) {
     console.log({ error })

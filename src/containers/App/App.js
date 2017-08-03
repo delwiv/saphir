@@ -23,7 +23,7 @@ import {
   // Drawer
 } from 'react-mdl';
 
-const SEARCH_TIMEOUT = 800
+const SEARCH_TIMEOUT = 350
 
 @asyncConnect([{
   promise: ({ store: { dispatch, getState } }) => {
@@ -79,6 +79,7 @@ export default class App extends Component {
       // logout
       this.props.pushState('/');
     }
+    this.setState({ searchResult: nextProps.searchResult })
   }
 
   search({ target }) {
@@ -106,15 +107,15 @@ export default class App extends Component {
   };
 
   render() {
-    const { user, notifs, children, searchResult } = this.props;
-    const { searchTerms } = this.state;
+    const { user, notifs, children } = this.props;
+    const { searchTerms, searchResult } = this.state;
     const styles = require('./App.scss');
 
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head} />
         <Layout fixedHeader>
-          <Header style={{ padding: 0 }}>
+          <Header style={{ paddingLeft: -70 }}>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <span className={styles.brand} />
@@ -152,16 +153,18 @@ export default class App extends Component {
               expandableIcon="search"
             />*/}
           </Header>
-          <div className={styles.searchResult}>
-            {searchResult.length && searchResult.map(u => (
-              <div className={styles.searchResultRow}>
-                <img alt="avatar" src={u.avatar} style={{ flex: 1 }} />
-                <div style={{ flex: 4, flexDirection: 'column' }}>
-                  <strong>{u.name}</strong>
-                  <p>{u.bio}</p>
+          <div className="searchResultContainer">
+            <div className={styles.searchResult}>
+              {searchResult.length && searchResult.map(u => (
+                <div className={styles.searchResultRow}>
+                  <img alt="avatar" src={u.avatar} style={{ flex: 1 }} />
+                  <div style={{ flex: 4, flexDirection: 'column' }}>
+                    <strong>{u.name}</strong>
+                    <p>{u.bio}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           {/* <Drawer>
             <Navigation>

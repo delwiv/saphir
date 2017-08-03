@@ -58,12 +58,7 @@ router.get('/create', async (req, res, next) => {
   try {
     const count = +req.query.count
     const a = Array(count).fill(0)
-    console.log({ count, a })
-    a.forEach(async () => {
-      const u = randomUser()
-      console.log({ u })
-      await User(u).save().catch(console.log)
-    })
+    a.forEach(() => process.nextTick(async () => { await User(randomUser()).save() }))
     res.end()
   } catch (error) {
     next(error)

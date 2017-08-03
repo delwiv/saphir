@@ -52,8 +52,6 @@ export default class ApiClient {
         if (data)
           request.send(data);
 
-        console.log({ headers: request.header })
-
         request.end((err, { body } = {}) => (
           err ? reject(body || err) : resolve(body))
         );
