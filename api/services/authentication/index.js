@@ -3,7 +3,7 @@ import uuid from 'uuid/v4';
 import { merge, pick } from 'ramda';
 
 import User from '../users/user';
-import { setDataForToken } from '../../lib/security';
+// import { setDataForToken } from '../../lib/security';
 import socketAuth from './socketAuth';
 
 export { socketAuth };
@@ -46,6 +46,7 @@ export default function authenticationService() {
   });
 
   app.get('/auth/twitch/callback', async (req, res) => {
+    const redis = app.get('redis')
     try {
       const { access_token, refresh_token } = JSON.parse(await app.get('twitchClient').verify({
         ...req.query,
@@ -54,7 +55,11 @@ export default function authenticationService() {
 
       const user = await getUserFromTwitch(access_token, refresh_token);
 
-      const token = await setDataForToken(app.get('redis'), user.uid, 'twitchToken');
+      const token = await redis.setDataForToken({
+        value: user.uid,
+        prefix: 'twitchToken',
+        expire: 300 // five minutes
+      });
 
       res.cookie('twitch-authorization', token);
 

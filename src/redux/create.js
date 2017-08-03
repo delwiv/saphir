@@ -1,8 +1,10 @@
 import { createStore as _createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
 import { routerMiddleware } from 'react-router-redux';
 import { createPersistor } from 'redux-persist';
 import createMiddleware from './middleware/clientMiddleware';
-import createReducers from './reducer';
+import createReducers, { configureEpics, rootEpic } from './reducer'
+
 
 export function inject(store, name, asyncReducer) {
   if (store.asyncReducers[name]) return;
@@ -20,7 +22,7 @@ function getMissingReducers(reducers, data) {
 
 export default function createStore(history, { client, app, restApp }, data, persistConfig = null) {
   const middleware = [createMiddleware({ client, app, restApp }), routerMiddleware(history)];
-
+  // , createEpicMiddleware(configureEpics({ client, restApp, app }))
   let enhancers = [applyMiddleware(...middleware)];
   if (__CLIENT__ && __DEVTOOLS__) {
     const { persistState } = require('redux-devtools');

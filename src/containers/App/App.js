@@ -9,6 +9,7 @@ import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/module
 import { Notifs } from 'components';
 import { push } from 'react-router-redux';
 import config from 'config';
+import { search } from 'redux/modules/teams';
 import { asyncConnect } from 'redux-connect';
 import {
   Layout,
@@ -18,8 +19,11 @@ import {
   FooterLinkList,
   FooterDropDownSection,
   Navigation,
+  Textfield
   // Drawer
 } from 'react-mdl';
+
+const SEARCH_TIMEOUT = 800
 
 @asyncConnect([{
   promise: ({ store: { dispatch, getState } }) => {
@@ -35,12 +39,14 @@ import {
   }
 }])
 
+
 @connect(
   state => ({
     notifs: state.notifs,
-    user: state.auth.user
+    user: state.auth.user,
+    searchResult: state.teams.searchResult
   }),
-  { logout, pushState: push })
+  { search, logout, pushState: push })
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
@@ -48,22 +54,49 @@ export default class App extends Component {
     user: PropTypes.object,
     notifs: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired
+    search: PropTypes.func.isRequired,
+    pushState: PropTypes.func.isRequired,
+    searchResult: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
-    user: null
+    user: null,
+    searchResult: []
   };
 
   static contextTypes = {
     store: PropTypes.object.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = { searchTerms: '', searchResult: [] };
+    this.search = this.search.bind(this);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.user && !nextProps.user) {
       // logout
       this.props.pushState('/');
     }
+  }
+
+  search({ target }) {
+    const searchTerms = target.value
+    this.setState({ searchTerms })
+
+    if (this.searchTimeoutId)
+      clearTimeout(this.searchTimeoutId)
+
+    if (searchTerms.trim().length === 0) {
+      this.setState({ searchResult: [] })
+      return
+    }
+
+    this.searchTimeoutId = setTimeout(() => {
+      this.props.search({ q: searchTerms })
+      this.searchTimeoutId = null
+    }, SEARCH_TIMEOUT)
   }
 
   handleLogout = event => {
@@ -73,14 +106,15 @@ export default class App extends Component {
   };
 
   render() {
-    const { user, notifs, children } = this.props;
+    const { user, notifs, children, searchResult } = this.props;
+    const { searchTerms } = this.state;
     const styles = require('./App.scss');
 
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head} />
         <Layout fixedHeader>
-          <Header>
+          <Header style={{ padding: 0 }}>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
                 <span className={styles.brand} />
@@ -98,6 +132,16 @@ export default class App extends Component {
                 Logout
               </span>}
             </Navigation>
+            <span>
+              <Textfield
+                onChange={this.search}
+                floatingLabel
+                label="Search teams and users"
+                placeholder="Search teams and users"
+                value={searchTerms}
+                // style={{ width: '100%' }}
+              />
+            </span>
             {/* <Textfield
               floatingLabel
               value=""
@@ -108,6 +152,17 @@ export default class App extends Component {
               expandableIcon="search"
             />*/}
           </Header>
+          <div className={styles.searchResult}>
+            {searchResult.length && searchResult.map(u => (
+              <div className={styles.searchResultRow}>
+                <img alt="avatar" src={u.avatar} style={{ flex: 1 }} />
+                <div style={{ flex: 4, flexDirection: 'column' }}>
+                  <strong>{u.name}</strong>
+                  <p>{u.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
           {/* <Drawer>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>

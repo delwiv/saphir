@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import type { NextFunction, $Response, $Request } from 'express'
-import User from './user'
+import User, { randomUser } from './user'
+
+export { User }
 
 const router = Router()
 
@@ -41,17 +43,31 @@ router.patch('/me', async (req: $Request, res: $Response, next: NextFunction) =>
 router.get('/all', async (req, res) => {
   res.status(203).end()
   const users = await User.find()
-  users.forEach(u => {
-    console.log(require('util').inspect({ [u.name]: u }, true, 10, true))
-  })
+  console.log(require('util').inspect({ users }, true, 10, true))
 })
 
 router.delete('/all', async (req, res) => {
-  res.status(203).end()
   const users = await User.find()
   users.forEach(async u => {
     await u.remove()
   })
+  res.status(203).end()
+})
+
+router.get('/create', async (req, res, next) => {
+  try {
+    const count = +req.query.count
+    const a = Array(count).fill(0)
+    console.log({ count, a })
+    a.forEach(async () => {
+      const u = randomUser()
+      console.log({ u })
+      await User(u).save().catch(console.log)
+    })
+    res.end()
+  } catch (error) {
+    next(error)
+  }
 })
 
 export default router;

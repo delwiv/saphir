@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { Link } from 'react-router';
+import { IndexLink } from 'react-router';
+import { CardLink } from 'components';
 // import { CounterButton, GithubButton } from 'components';
 // import config from 'config';
 import Helmet from 'react-helmet';
@@ -11,21 +12,15 @@ import { equals } from 'ramda'
 import { Grid, Cell, Textfield, Button } from 'react-mdl';
 import { fetchUser, saveUser } from 'redux/modules/auth';
 
-// @asyncConnect([{
-//   promise: ({ store: { dispatch } }) => dispatch(fetchUser())
-// }])
-
-@connect(
-  state => ({
-    query: state.routing.locationBeforeTransitions.query,
-    user: state.auth.user,
-    token: state.auth.token,
-    fetching: state.auth.fetchingMe
-  }), {
-    fetchUser,
-    saveUser,
-  }
-)
+@connect(state => ({
+  query: state.routing.locationBeforeTransitions.query,
+  user: state.auth.user,
+  token: state.auth.token,
+  fetching: state.auth.fetchingMe
+}), {
+  fetchUser,
+  saveUser,
+})
 export default class Me extends Component {
 
   static propTypes = {
@@ -88,12 +83,6 @@ export default class Me extends Component {
       <div className={styles.me}>
         <Helmet title="Me" />
         <h1>My profile</h1>
-        <Button
-          raised
-          ripple
-          colored
-          onClick={this.props.fetchUser}
-        >Reload</Button>
         {/* query && Object.keys(query).map(k => (<p key={k}><strong>{k}</strong>{`  ${query[k]}`}</p>)) */}
         {/* user && Object.keys(user).map(k => (<p key={k}><strong>{k}</strong>{`  ${user[k]}`}</p>)) */}
         <div>
@@ -106,10 +95,26 @@ export default class Me extends Component {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                // alignItems: 'center',
+                alignItems: 'center',
                 // justifyContent: 'center'
               }}
             >
+              <div>
+                <span>Team: </span>
+                {user.teams && user.teams.length ? user.teams.map(team => (<CardLink
+                  to={`/team/${team.uid}`}
+                  title={team.name}
+                  desc={team.desc}
+                  bg={team.banner}
+                  />)) : <IndexLink to="/teams/search">
+                    <Button
+                      accent
+                      ripple
+                      raised
+                    >Create</Button>
+                  </IndexLink>
+                }
+              </div>
               <Textfield
                 onChange={this.updateUser('name')}
                 floatingLabel

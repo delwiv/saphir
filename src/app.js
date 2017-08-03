@@ -5,6 +5,7 @@ import rest from 'feathers-rest/client';
 import socketio from 'feathers-socketio/client';
 import io from 'socket.io-client';
 import superagent from 'superagent';
+import 'rxjs'
 import config from './config';
 
 // const storage = __SERVER__ ? null : require('localforage');
