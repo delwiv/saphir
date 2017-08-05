@@ -174,7 +174,7 @@ export default class Me extends Component {
               onClick={this.saveUser}
             >Save profile</Button>
           </div>
-        </div>}
+        </div>
 
       </div>
     );

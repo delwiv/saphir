@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { IndexLink } from 'react-router';
 import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from 'react-helmet';
+import { CSSTransitionGroup } from 'react-transition-group'
 // import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
 import { Notifs } from 'components';
@@ -19,8 +20,9 @@ import {
   FooterLinkList,
   FooterDropDownSection,
   Navigation,
-  Textfield
-  // Drawer
+  Textfield,
+  IconButton,
+  Drawer
 } from 'react-mdl';
 
 const SEARCH_TIMEOUT = 350
@@ -72,6 +74,7 @@ export default class App extends Component {
     super(props);
     this.state = { searchTerms: '', searchResult: [] };
     this.search = this.search.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,7 +82,8 @@ export default class App extends Component {
       // logout
       this.props.pushState('/');
     }
-    this.setState({ searchResult: nextProps.searchResult })
+    if (this.state.searchTerms.trim().length)
+      this.setState({ searchResult: nextProps.searchResult })
   }
 
   search({ target }) {
@@ -100,6 +104,12 @@ export default class App extends Component {
     }, SEARCH_TIMEOUT)
   }
 
+  clearSearch() {
+    if (this.searchTimeoutId)
+      clearTimeout(this.searchTimeoutId)
+    this.setState({ searchResult: [], searchTerms: '' })
+  }
+
   handleLogout = event => {
     event.preventDefault();
     this.props.logout();
@@ -111,20 +121,39 @@ export default class App extends Component {
     const { searchTerms, searchResult } = this.state;
     const styles = require('./App.scss');
 
+    const searchResultComponent = searchResult.map(u => (
+      <div className={styles.searchResultRow} key={u.uid}>
+        <img alt="avatar" src={u.avatar} style={{ flex: 1 }} />
+        <div style={{ flex: 4, flexDirection: 'column' }}>
+          <strong>{u.name}</strong>
+          <p>{u.bio}</p>
+        </div>
+      </div>
+    ))
+
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head} />
         <Layout fixedHeader>
           <Header style={{ paddingLeft: -70 }}>
+            <span>
+              <Textfield
+                onChange={this.search}
+                floatingLabel
+                label="Search teams and users"
+                placeholder="Search teams and users"
+                value={searchTerms}
+                style={{ maxWidth: '60%' }}
+              />
+            </span>
+          </Header>
+          <Drawer>
             <Navigation>
               <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
-                <span className={styles.brand} />
+                <span>Home</span>
               </IndexLink>
               {!user && <IndexLink to="/login">
                 <span>Login</span>
-              </IndexLink>}
-              {!user && <IndexLink to="/register">
-                <span>Register</span>
               </IndexLink>}
               {user && <IndexLink to="/me">
                 <span>My profile</span>
@@ -133,57 +162,42 @@ export default class App extends Component {
                 Logout
               </span>}
             </Navigation>
-            <span>
-              <Textfield
-                onChange={this.search}
-                floatingLabel
-                label="Search teams and users"
-                placeholder="Search teams and users"
-                value={searchTerms}
-                // style={{ width: '100%' }}
-              />
-            </span>
-            {/* <Textfield
-              floatingLabel
-              value=""
-              placeholder="Team name, member, tournament, city..."
-              onChange={() => {}}
-              label="Search"
-              expandable
-              expandableIcon="search"
-            />*/}
-          </Header>
+          </Drawer>
           <div className="searchResultContainer">
             <div className={styles.searchResult}>
-              {searchResult.length && searchResult.map(u => (
-                <div className={styles.searchResultRow}>
-                  <img alt="avatar" src={u.avatar} style={{ flex: 1 }} />
-                  <div style={{ flex: 4, flexDirection: 'column' }}>
-                    <strong>{u.name}</strong>
-                    <p>{u.bio}</p>
-                  </div>
+              <CSSTransitionGroup
+                transitionName="example"
+                transitionAppear
+                transitionAppearTimeout={500}
+                transitionEnterTimeout={500}
+                transitionLeaveTimeout={300}
+                style={{
+                  // paddingTop: '12px'
+                }}
+              >
+                <div
+                  style={{
+                    position: 'sticky',
+                    // right: 0,
+                    top: 0,
+                    zIndex: 110
+                  }}
+                >
+                  {searchResult.length ? <IconButton
+                    onClick={this.clearSearch}
+                    accent
+                    name="clear_all"
+                    style={{
+                      position: 'absolute',
+                      right: 10
+                    }}
+                  /> : ''}
                 </div>
-              ))}
+                {searchResultComponent}
+              </CSSTransitionGroup>
             </div>
           </div>
-          {/* <Drawer>
-            <Navigation>
-              <IndexLink to="/" activeStyle={{ color: '#33e0ff' }}>
-                <div className={styles.brand} />
-              </IndexLink>
-              {!user && <IndexLink to="/login">
-                <span>Login</span>
-              </IndexLink>}
-              {!user && <IndexLink to="/register">
-                <span>Register</span>
-              </IndexLink>}
-              {user && <IndexLink to="/logout">
-                <span role="button" tabIndex={0} className="logout-link" onClick={this.handleLogout}>
-                  Logout
-                </span>
-              </IndexLink>}
-            </Navigation>
-          </Drawer>*/}
+
           <div className={styles.appContent}>
             {notifs.global && <div className="container">
               <Notifs
@@ -192,6 +206,7 @@ export default class App extends Component {
                 NotifComponent={props => <Alert bsStyle={props.kind}>{props.message}</Alert>}
             />
             </div>}
+
 
             {children}
           </div>
