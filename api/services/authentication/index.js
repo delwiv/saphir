@@ -1,8 +1,7 @@
 // @flow
 import uuid from 'uuid/v4';
 import { merge, pick } from 'ramda';
-
-import User from '../users/user';
+import User, { randomUser } from '../users/user';
 // import { setDataForToken } from '../../lib/security';
 import socketAuth from './socketAuth';
 
@@ -28,11 +27,12 @@ export default function authenticationService() {
         existing.rawTwitch = {};
 
       existing.authTwitch = { accessToken, refreshToken };
-      existing.rawTwitch = merge(existing.rawTwitch, userFromTwitch);
+      existing.rawTwitch = merge(randomUser(), existing.rawTwitch, userFromTwitch);
       return existing.save();
     }
     console.log('create new user')
     return User.create({
+      ...randomUser(),
       ...extractTwitchFields(userFromTwitch),
       rawTwitch: userFromTwitch,
       authTwitch: { accessToken, refreshToken },

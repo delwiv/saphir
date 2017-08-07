@@ -136,7 +136,13 @@ export default class App extends Component {
         <Helmet {...config.app.head} />
         <Layout fixedHeader>
           <Header style={{ paddingLeft: -70 }}>
-            <span>
+            <span
+              style={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'flex-end'
+              }}
+            >
               <Textfield
                 onChange={this.search}
                 floatingLabel

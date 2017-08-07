@@ -56,7 +56,10 @@ const publicFields = [
   'hardware',
   'logo',
   'uid',
-  'createdAt'
+  'createdAt',
+  'avatar',
+  'birthDate',
+  'address',
 ]
 
 User.statics = {
@@ -78,6 +81,7 @@ export const randomUser = () => ({
   email: faker.internet.email(),
   avatar: faker.internet.avatar(),
   bio: faker.hacker.phrase(),
+  teams: ['Gambit', 'SKT', 'Fnatic'],
   // teams: [`${faker.hacker.adjective()} ${faker.hacker.noun()}`],
   games: [{
     // https://github.com/igdb/igdb-api-node

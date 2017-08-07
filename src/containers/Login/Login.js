@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import LoginForm from 'components/LoginForm/LoginForm';
+// import LoginForm from 'components/LoginForm/LoginForm';
 // import FacebookLogin from 'components/FacebookLogin/FacebookLogin';
 import * as authActions from 'redux/modules/auth';
 import * as notifActions from 'redux/modules/notifs';
@@ -82,10 +82,13 @@ export default class Login extends Component {
     return (
       <div className="container">
         <Helmet title="Login" />
-        <h1>Login</h1>
-        {!user && <div>
-          <LoginForm onSubmit={this.login} />
-          <p>This will "log you in" as this user, storing the username in the session of the API server.</p>
+        {!user && <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <h2>Login methods</h2>
           {/* <FacebookLogin
               appId="635147529978862"
               fields="name,email,picture"
@@ -101,7 +104,7 @@ export default class Login extends Component {
                 color: '#ffffff'
               }}
             >
-              <span>Login with <i className="fa fa-twitch" style={{ width: '24px' }} /></span>
+              <span><i className="fa fa-twitch" style={{ width: '24px' }} /> Twitch</span>
             </Button>
           </a>
         </div>

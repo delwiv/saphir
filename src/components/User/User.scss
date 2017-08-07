@@ -1,0 +1,16 @@
+@import '../../theme/variables.scss';
+
+.user {
+  dd {
+    margin-bottom: 15px;
+  }
+}
+
+.vertical {
+  display: flex;
+  flex-direction: row;
+  // height: 25vh;
+  width: 100%;
+  overflow-x: scroll;
+}
+
